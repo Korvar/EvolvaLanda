@@ -7,7 +7,7 @@ import org.flixel.FlxG;
  */
 class SmoothNoise
 {
-	var values:Array<Float>;  // the actual values in the array
+	public var values:Array<Float>;  // the actual values in the array
 	var width:Int; // The number of entries
 	var octave:Int; // The octave
 	var frequency:Int;
@@ -20,7 +20,7 @@ class SmoothNoise
 		lengthOfFullArray = LengthOfFullArray;
 		values = new Array<Float>();
 		
-		for (i in 0...width - 1)
+		for (i in 0...width)
 		{
 			values[i] = FlxG.random();
 		}
@@ -35,10 +35,10 @@ class SmoothNoise
 		var x:Float;
 		var t:Float;
 		
-		x = X / lengthOfFullArray / width;
+		x = (X / cast(lengthOfFullArray, Float)) * cast(width, Float);
 		
-		xMin = Math.floor(x);
-		xMax = xMin + 1;
+		xMin = Math.floor(x) % width;
+		xMax = (Math.floor(x) + 1) % width;
 		
 		t = x - xMin;
 		
@@ -49,7 +49,11 @@ class SmoothNoise
 	{
 		t = map(t);
 		
-		return(values[xMin] * (1 - t) + (values[xMax] * t));
+		var dx:Float = values[xMax] - values[xMin];
+		
+		return values[xMin] + t * dx;
+		
+		// return(values[xMin] * (1 - t) + (values[xMax] * t));
 		
 	}
 	
@@ -59,7 +63,10 @@ class SmoothNoise
 		// we effect how smooth the curve is
 		
 		// Linear 
-		return(t);
+		//return(t);
+		
+		// cosine
+		return ((1 - Math.cos(t * Math.PI)) * 0.5);
 	}
 	
 	function toString():String
