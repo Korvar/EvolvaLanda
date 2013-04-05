@@ -16,8 +16,6 @@ import box2D.common.math.B2Vec2;
  */
 class B2FlxTileblock extends FlxTileblock
 {
-	private var ratio:Float = 30.0;
-	
 	public var _fixDef:B2FixtureDef;
 	public var _bodyDef:B2BodyDef;
 	public var _obj:B2Body;
@@ -41,7 +39,7 @@ class B2FlxTileblock extends FlxTileblock
 	public function createBody():Void
 	{
 		var boxShape:B2PolygonShape = new B2PolygonShape();
-		boxShape.setAsBox((width / 2) / ratio, (height / 2) / ratio);
+		boxShape.setAsBox((width / 2) / Registry.ratio, (height / 2) / Registry.ratio);
 		
 		_fixDef = new B2FixtureDef();
 		_fixDef.density = _density;
@@ -50,7 +48,7 @@ class B2FlxTileblock extends FlxTileblock
 		_fixDef.shape = boxShape;
 		
 		_bodyDef = new B2BodyDef();
-		_bodyDef.position.set((x + (width / 2)) / ratio, (y + (height / 2)) / ratio);
+		_bodyDef.position.set((x + (width / 2)) / Registry.ratio, (y + (height / 2)) / Registry.ratio);
 		_bodyDef.angle = _angle * (Math.PI / 180);
 		_bodyDef.type = B2Body.b2_staticBody;
 		

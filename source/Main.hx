@@ -15,6 +15,8 @@ import org.flixel.FlxGame;
 class Main extends Sprite 
 {
 	
+	private var debugSprite:Sprite;
+	
 	public function new () 
 	{
 		super();
@@ -36,6 +38,7 @@ class Main extends Sprite
 		
 		var demo:FlxGame = new ProjectClass();
 		addChild(demo);
+		addChild(debugSprite);
 		
 		#if (cpp || neko)
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUP);
@@ -56,6 +59,9 @@ class Main extends Sprite
 	{
 		Lib.current.stage.align = StageAlign.TOP_LEFT;
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		
+		debugSprite = new Sprite();
+		Registry.debugSprite = debugSprite;
 	}
 	
 	// Entry point

@@ -13,8 +13,6 @@ import org.flixel.FlxSprite;
  */
 class B2FlxSprite extends FlxSprite
 {
-	private var ratio:Float = 30.0;
-	
 	private var _fixDef:B2FixtureDef;
 	private var _bodyDef:B2BodyDef;
 	private var _obj:B2Body;
@@ -39,8 +37,8 @@ class B2FlxSprite extends FlxSprite
 	
 	override public function update():Void
 	{
-		x = (_obj.getPosition().x * ratio) -width / 2;
-		y = (_obj.getPosition().y * ratio) -height / 2;
+		x = (_obj.getPosition().x * Registry.ratio) -width / 2;
+		y = (_obj.getPosition().y * Registry.ratio) -height / 2;
 		angle = _obj.getAngle() * (180 / Math.PI);
 		
 		super.update();
@@ -49,7 +47,7 @@ class B2FlxSprite extends FlxSprite
 	public function createBody():Void
 	{
 		var boxShape:B2PolygonShape = new B2PolygonShape();
-		boxShape.setAsBox((width / 2) / ratio, (height / 2) / ratio);
+		boxShape.setAsBox((width / 2) / Registry.ratio, (height / 2) / Registry.ratio);
 		
 		_fixDef = new B2FixtureDef();
 		_fixDef.density = _density;
@@ -58,7 +56,7 @@ class B2FlxSprite extends FlxSprite
 		_fixDef.shape = boxShape;
 		
 		_bodyDef = new B2BodyDef();
-		_bodyDef.position.set((x + (width / 2)) / ratio, (y + (height / 2)) / ratio);
+		_bodyDef.position.set((x + (width / 2)) / Registry.ratio, (y + (height / 2)) / Registry.ratio);
 		_bodyDef.angle = angle * (Math.PI / 180);
 		_bodyDef.type = B2Body.b2_dynamicBody;
 		
