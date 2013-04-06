@@ -83,6 +83,8 @@ class Assets {
 			resourceTypes.set ("assets/data/fontData11pt.png", "image");
 			resourceClasses.set ("assets/data/handle.png", NME_assets_data_handle_png);
 			resourceTypes.set ("assets/data/handle.png", "image");
+			resourceClasses.set ("assets/data/LanderTemplate.png", NME_assets_data_landertemplate_png);
+			resourceTypes.set ("assets/data/LanderTemplate.png", "image");
 			resourceClasses.set ("assets/data/logo.png", NME_assets_data_logo_png);
 			resourceTypes.set ("assets/data/logo.png", "image");
 			resourceClasses.set ("assets/data/logo_corners.png", NME_assets_data_logo_corners_png);

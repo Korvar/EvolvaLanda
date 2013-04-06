@@ -62,25 +62,11 @@ class PlayState extends FlxState
 		floor.makeGraphic(FlxG.width, 10, 0xFFFF9900);
 		add(floor);
 		
-		var cube:B2FlxSprite;
-		for (i in 1...30)
-		{
-			var cubeWidth:Float = FlxG.random() * 40 + 10;
-			var cubeHeight:Float = FlxG.random() * 40 + 10;
-			cube = new B2FlxSprite(FlxG.random() * 640, FlxG.random() * 50, cubeWidth, cubeHeight, _world);
-			cube.angle = FlxG.random() * 360;
-			cube.createBody();
-			cube.makeGraphic(FlxU.floor(cubeWidth), FlxU.floor(cubeHeight), 0xff00cccc);
-			
-			add(cube);
-		}
-		
-		setupDebugDraw();
+		// addCubes();
 		
 
 		
-		
-		
+		setupDebugDraw();
 
 	}
 
@@ -121,7 +107,7 @@ class PlayState extends FlxState
 			octave1.values[i] = FlxU.roundDecimal(octave1.values[i], 3);
 		}
 		messageString = "\n" + landscapeArray.toString() + "\n\n" + octave1.values.toString();
-		Registry.debugString.text += messageString;
+		// Registry.debugString.text += messageString;
 		
 		#end
 
@@ -180,7 +166,9 @@ class PlayState extends FlxState
 	
 	function createLander()
 	{
-		
+		var lander:Lander = new Lander(320, 0, 7 * Registry.ratio, 5 * Registry.ratio, _world);
+		lander.createBody();
+		add(lander);
 	}
 	
 	private function setupWorld():Void
@@ -195,7 +183,7 @@ class PlayState extends FlxState
 		if (polys == null)
 		{
 			//abort!
-			Registry.debugString.text += "\n\nAbort!";
+			// Registry.debugString.text += "\n\nAbort!";
 			return;
 		}
 		for(poly in polys) {
@@ -228,10 +216,31 @@ class PlayState extends FlxState
 		
 	}
 	
+	private function addCubes():Void 
+	{
+		var cube:B2FlxSprite;
+		for (i in 1...30)
+		{
+			var cubeWidth:Float = FlxG.random() * 40 + 10;
+			var cubeHeight:Float = FlxG.random() * 40 + 10;
+			cube = new B2FlxSprite(FlxG.random() * 640, FlxG.random() * 50, cubeWidth, cubeHeight, _world);
+			cube.angle = FlxG.random() * 360;
+			cube.createBody();
+			cube.makeGraphic(FlxU.floor(cubeWidth), FlxU.floor(cubeHeight), 0xff00cccc);
+			
+			add(cube);
+		}
+	}
+	
 	override public function update():Void
 	{
 		_world.step(FlxG.elapsed, 10, 10);
 		_world.drawDebugData();
 		super.update();
+		
+		if (FlxG.keys.justPressed("R"))
+		{
+			FlxG.switchState(new PlayState());
+		}
 	}
 }

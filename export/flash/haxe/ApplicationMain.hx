@@ -202,6 +202,11 @@ class ApplicationMain {
             return Assets.getBitmapData ("assets/data/handle.png");
          
 		
+		if (inName=="assets/data/LanderTemplate.png")
+			 
+            return Assets.getBitmapData ("assets/data/LanderTemplate.png");
+         
+		
 		if (inName=="assets/data/logo.png")
 			 
             return Assets.getBitmapData ("assets/data/logo.png");
@@ -322,6 +327,7 @@ class NME_assets_data_default_png extends nme.display.BitmapData { public functi
 class NME_assets_data_fontdata10pt_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
 class NME_assets_data_fontdata11pt_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
 class NME_assets_data_handle_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+class NME_assets_data_landertemplate_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
 class NME_assets_data_logo_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
 class NME_assets_data_logo_corners_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
 class NME_assets_data_logo_light_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
