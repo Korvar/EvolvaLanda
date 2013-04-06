@@ -57,23 +57,23 @@ class PlayState extends FlxState
 		
 		createLander();
 		
-		var floor:B2FlxTileblock = new B2FlxTileblock(0, 400, 640, 80, _world);
+		var floor:B2FlxTileblock = new B2FlxTileblock(0, FlxG.height - 10, FlxG.width, 10, _world);
 		floor.createBody();
-		floor.makeGraphic(640, 80, 0xFFFF9900);
+		floor.makeGraphic(FlxG.width, 10, 0xFFFF9900);
 		add(floor);
 		
-		//var cube:B2FlxSprite;
-		//for (i in 1...30)
-		//{
-			//var cubeWidth:Float = FlxG.random() * 40 + 10;
-			//var cubeHeight:Float = FlxG.random() * 40 + 10;
-			//cube = new B2FlxSprite(FlxG.random() * 640, FlxG.random() * 240, cubeWidth, cubeHeight, _world);
-			//cube.angle = FlxG.random() * 360;
-			//cube.createBody();
-			//cube.makeGraphic(FlxU.floor(cubeWidth), FlxU.floor(cubeHeight), 0xff00cccc);
-			//
-			//add(cube);
-		//}
+		var cube:B2FlxSprite;
+		for (i in 1...30)
+		{
+			var cubeWidth:Float = FlxG.random() * 40 + 10;
+			var cubeHeight:Float = FlxG.random() * 40 + 10;
+			cube = new B2FlxSprite(FlxG.random() * 640, FlxG.random() * 50, cubeWidth, cubeHeight, _world);
+			cube.angle = FlxG.random() * 360;
+			cube.createBody();
+			cube.makeGraphic(FlxU.floor(cubeWidth), FlxU.floor(cubeHeight), 0xff00cccc);
+			
+			add(cube);
+		}
 		
 		setupDebugDraw();
 		
@@ -88,15 +88,17 @@ class PlayState extends FlxState
 	{
 		var octave1:SmoothNoise;
 		var octave2:SmoothNoise;
+		var octave3:SmoothNoise;
 		
-		var arrayLength = 60; // FlxG.width;
+		var arrayLength = 120; // FlxG.width;
 		
 		var landscapeArray:Array<Float> = new Array<Float>();
 		
 		var pointsArray:Array<FlxPoint> = new Array<FlxPoint>();
 		
-		octave1 = new SmoothNoise(10, arrayLength);
-		octave2 = new SmoothNoise(20, arrayLength);
+		octave1 = new SmoothNoise(6, arrayLength);
+		octave2 = new SmoothNoise(12, arrayLength);
+		octave3 = new SmoothNoise(24, arrayLength);
 		
 		var landscapeLength = FlxG.width;
 		var landscapeHeight = FlxG.height / 2;
@@ -107,14 +109,10 @@ class PlayState extends FlxState
 		
 		for (i in 0...arrayLength)
 		{
-			var noiseValue = octave1.noise(i) + (octave2.noise(i) / 2);
+			var noiseValue = octave1.noise(i) + (octave2.noise(i) / 2) + (octave3.noise(i) / 4);
 			landscapeArray[i] = FlxU.roundDecimal(noiseValue, 3); 
 			pointsArray[i] = new FlxPoint(i * lengthRatio, noiseValue * heightRatio);
 		}
-		
-		pointsArray.push(new FlxPoint(arrayLength * lengthRatio, 1.1* heightRatio));
-		pointsArray.push(new FlxPoint(arrayLength / 2 * lengthRatio, 1.1* heightRatio));
-		pointsArray.push(new FlxPoint(0, 1.1 * heightRatio));
 		
 		#if debug
 				
@@ -136,33 +134,32 @@ class PlayState extends FlxState
 	}
 	
 	
-	function makeLandscapeBody(pointsArray:Array<Dynamic>)
+	function makeLandscapeBody(pointsArray:Array<FlxPoint>)
 	{
 		var body:B2Body;
 		var bodyDef:B2BodyDef;
-		var polytool:PolygonTool = new PolygonTool();
+		var polygonShape:B2PolygonShape;
+		var fixtureDef:B2FixtureDef;
 		
 		bodyDef = new B2BodyDef();
-		bodyDef.type = B2Body.b2_dynamicBody;
+		bodyDef.type = B2Body.b2_staticBody;
 		
 		body = _world.createBody(bodyDef);	
 		body.setPositionAndAngle(new B2Vec2(0 / Registry.ratio, 100 / Registry.ratio), 0);
 		
-		var vertArray = pointsArray.slice(0);
-		
-		if (!polytool.isPolyClockwise(vertArray))
-			vertArray.reverse();
-		var polys = polytool.earClip(vertArray);
-
-		if (polys != null) 
+		for (i in 0...pointsArray.length -2)
 		{
-			makeComplexBody(body, polys);
-		} 
-		else 
-		{
-			vertArray = polytool.getConvexPoly(pointsArray).slice(0);
-			polys = polytool.earClip(vertArray);
-			makeComplexBody(body, polys);
+			fixtureDef = new B2FixtureDef();
+			polygonShape = new B2PolygonShape();
+			var p1:B2Vec2 = new B2Vec2(pointsArray[i].x / Registry.ratio, pointsArray[i].y / Registry.ratio);
+			var p2:B2Vec2 = new B2Vec2(pointsArray[i + 1].x / Registry.ratio, pointsArray[i + 1].y / Registry.ratio);
+			polygonShape.setAsEdge(p1, p2);
+			fixtureDef.shape = polygonShape;
+			fixtureDef.density = 1.0;
+			fixtureDef.friction = 0.3;
+			body.createFixture(fixtureDef);
+			
+	
 		}
 		
 		
