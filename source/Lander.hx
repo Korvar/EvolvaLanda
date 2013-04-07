@@ -11,6 +11,7 @@ import box2D.dynamics.B2Body;
 import box2D.dynamics.B2BodyDef;
 import box2D.dynamics.B2FixtureDef;
 import box2D.dynamics.B2World;
+import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.FlxU;
  
@@ -24,8 +25,8 @@ class Lander extends FlxSprite
 	private var _world:B2World;
 	
 	public var _friction:Float = 0.8;
-	public var _restitution:Float = 0.3;
-	public var _density:Float = 0.7;
+	public var _restitution:Float = 0.1;
+	public var _density:Float = 1.0;
 	
 	public var _angle:Float = 0;
 	
@@ -44,10 +45,66 @@ class Lander extends FlxSprite
 	
 	override public function update():Void
 	{
+		var upperJet:B2Vec2 = new B2Vec2(0, -2.5);
+		var lowerJet:B2Vec2 = new B2Vec2(0, -1.5);
+		
+		
+		var B2angle:Float = _obj.getAngle();
+		var upThrustAngle:Float;
+		var rightThrustAngle:Float;
+		var leftThrustAngle:Float;
+		var downThrustAngle:Float;
+		
+		var upThrustVec:B2Vec2;
+		var rightThrustVec:B2Vec2;
+		var leftThrustVec:B2Vec2;
+		var downThrustVec:B2Vec2;
+		
+		upThrustAngle = B2angle - (Math.PI / 2);
+		rightThrustAngle = B2angle;
+		leftThrustAngle = B2angle + Math.PI;
+		downThrustAngle = B2angle + (Math.PI / 2);
+		
+		var upThrustVec:B2Vec2 = new B2Vec2(Math.cos(upThrustAngle), Math.sin(upThrustAngle));
+		var rightThrustVec:B2Vec2 = new B2Vec2(Math.cos(rightThrustAngle), Math.sin(rightThrustAngle));
+		var leftThrustVec:B2Vec2 = new B2Vec2(Math.cos(leftThrustAngle), Math.sin(leftThrustAngle));
+		var downThrustVec:B2Vec2 = new B2Vec2(Math.cos(downThrustAngle), Math.sin(downThrustAngle));
+		
+		if (FlxG.keys.pressed("SPACE"))
+		{
+			upThrustVec.multiply(10);
+			_obj.applyForce(upThrustVec, _obj.getWorldCenter());
+			Registry.debugString.text = "Space! " + upThrustVec.length();
+		}
+		else
+		{
+			Registry.debugString.text = "No Space! " + upThrustVec.length();
+		}
+		
+		if (FlxG.keys.pressed("A"))
+		{
+			_obj.applyForce(leftThrustVec, _obj.getWorldPoint(upperJet));
+			_obj.applyForce(rightThrustVec, _obj.getWorldPoint(lowerJet));
+		}
+		
+		if (FlxG.keys.pressed("D"))
+		{
+			_obj.applyForce(rightThrustVec, _obj.getWorldPoint(upperJet));
+			_obj.applyForce(leftThrustVec, _obj.getWorldPoint(lowerJet));
+		}
+		
+		
+		
 		x = (_obj.getPosition().x * Registry.ratio) -width / 2;
 		y = (_obj.getPosition().y * Registry.ratio) -height / 2;
-		angle = _obj.getAngle() * (180 / Math.PI);
 		
+		
+		angle = _obj.getAngle() * (180 / Math.PI);
+
+		Registry.debugString.text += "\nX: " +  FlxU.roundDecimal(_obj.getPosition().x, 3) 
+			+ " Y: " + FlxU.roundDecimal(_obj.getPosition().y, 3);
+		Registry.debugString.text += "\nXV: " + FlxU.roundDecimal(_obj.getLinearVelocity().x, 3) 
+			+ " YV: " + FlxU.roundDecimal(_obj.getLinearVelocity().y,3);
 		super.update();
 	}
 	

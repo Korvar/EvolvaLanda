@@ -23,7 +23,7 @@ class B2FlxTileblock extends FlxTileblock
 	private var _world:B2World;
 	
 	public var _friction:Float = 0.8;
-	public var _restitution:Float = 0.3;
+	public var _restitution:Float = 0.1;
 	public var _density:Float = 0.7;
 	
 	public var _angle:Float = 0;
