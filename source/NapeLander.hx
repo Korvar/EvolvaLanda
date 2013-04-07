@@ -6,6 +6,7 @@ import nape.phys.Body;
 import nape.phys.Material;
 import nape.shape.Polygon;
 import org.flixel.FlxG;
+import org.flixel.FlxU;
 import org.flixel.nape.FlxPhysSprite;
 
 /**
@@ -14,6 +15,8 @@ import org.flixel.nape.FlxPhysSprite;
  */
 class NapeLander extends FlxPhysSprite
 {
+	
+	var thrust:Float = 0.0;
 
 	public function new(X:Float=0, Y:Float=0, SimpleGraphic:Dynamic=null, CreateBody:Bool=true) 
 	{
@@ -92,7 +95,7 @@ class NapeLander extends FlxPhysSprite
 		strut1Weld.damping = 1.0;
 		strut1Weld.space = body.space;
 		
-		var strut2:FlxPhysSprite = new  FlxPhysSprite(x - 25 , y + 10);
+		var strut2:FlxPhysSprite = new  FlxPhysSprite(x + 25 , y + 10);
 		pointsArray[3] = new Vec2( -6.25, -3.85);	
 		pointsArray[2] = new Vec2( 2.5, 5);
 		pointsArray[1] = new Vec2(5, 5);			
@@ -183,4 +186,22 @@ class NapeLander extends FlxPhysSprite
 		
 	}
 	
+	override public function update():Void
+	{
+		if (FlxG.keys.pressed("UP") || FlxG.keys.pressed("W"))
+		{
+			thrust -= 10;
+		}
+		
+		if (FlxG.keys.pressed("DOWN") || FlxG.keys.pressed("S"))
+		{
+			thrust += 10;
+		}
+		
+		thrust = FlxU.bound(thrust, -1000, 0);
+		
+		body.applyImpulse(body.localVectorToWorld(Vec2.weak(0, thrust))/*, body.localVectorToWorld(Vec2.weak(0, 15))*/);
+		
+		super.update();
+	}
 }
