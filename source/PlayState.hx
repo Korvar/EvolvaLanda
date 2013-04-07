@@ -53,7 +53,7 @@ class PlayState extends FlxState
 		
 		setupWorld();
 		
-		createLandscape();
+		// createLandscape();
 		
 		createLander();
 		
@@ -75,6 +75,7 @@ class PlayState extends FlxState
 		var octave1:SmoothNoise;
 		var octave2:SmoothNoise;
 		var octave3:SmoothNoise;
+		var octave4:SmoothNoise;
 		
 		var arrayLength = 120; // FlxG.width;
 		
@@ -85,17 +86,19 @@ class PlayState extends FlxState
 		octave1 = new SmoothNoise(6, arrayLength);
 		octave2 = new SmoothNoise(12, arrayLength);
 		octave3 = new SmoothNoise(24, arrayLength);
+		octave4 = new SmoothNoise(48, arrayLength);
 		
 		var landscapeLength = FlxG.width;
-		var landscapeHeight = FlxG.height / 2;
+		var landscapeHeight = FlxG.height;
 		
 		var lengthRatio:Float = cast(landscapeLength, Float) / cast(arrayLength, Float);
 		var heightRatio:Float = landscapeHeight;
 		
-		
 		for (i in 0...arrayLength)
 		{
-			var noiseValue = octave1.noise(i) + (octave2.noise(i) / 2) + (octave3.noise(i) / 4);
+			var noiseValue = (octave1.noise(i) / 2) + (octave2.noise(i) / 4) + (octave3.noise(i) / 8) + (octave4.noise(i) / 16);
+			noiseValue = (noiseValue * 2) - 1;
+			noiseValue = FlxU.abs(noiseValue);
 			landscapeArray[i] = FlxU.roundDecimal(noiseValue, 3); 
 			pointsArray[i] = new FlxPoint(i * lengthRatio, noiseValue * heightRatio);
 		}
@@ -112,11 +115,6 @@ class PlayState extends FlxState
 		#end
 
 		makeLandscapeBody(pointsArray);
-		
-
-		
-		
-
 	}
 	
 	
@@ -144,11 +142,7 @@ class PlayState extends FlxState
 			fixtureDef.density = 1.0;
 			fixtureDef.friction = 0.3;
 			body.createFixture(fixtureDef);
-			
-	
 		}
-		
-		
 	}
 	
 	function setupDebugDraw()
@@ -160,7 +154,7 @@ class PlayState extends FlxState
 		debugDraw.setLineThickness(1.0);
 		debugDraw.setAlpha(1);
 		debugDraw.setFillAlpha(0.5);
-		debugDraw.setFlags(B2DebugDraw.e_shapeBit | B2DebugDraw.e_jointBit);
+		debugDraw.setFlags(B2DebugDraw.e_shapeBit | B2DebugDraw.e_jointBit | B2DebugDraw.e_centerOfMassBit);
 		_world.setDebugDraw(debugDraw);
 	}
 	
@@ -178,43 +172,6 @@ class PlayState extends FlxState
 		
 	}
 	
-	private function makeComplexBody(p_body:B2Body, polys:Array<Array<Dynamic>>):Void 
-	{
-		if (polys == null)
-		{
-			//abort!
-			// Registry.debugString.text += "\n\nAbort!";
-			return;
-		}
-		for(poly in polys) {
-			if(poly != null) {
-				
-				var polyDef:B2FixtureDef;
-				var polyShape:B2PolygonShape = new B2PolygonShape();
-				polyDef = new B2FixtureDef();
-				polyDef.friction = 0.5;
-				polyDef.restitution = 0.2;
-				
-				var polyVerts:Array<B2Vec2> = new Array<B2Vec2>();
-				
-				polyDef.density = 1.0;
-				
-				for (vertex in poly) {
-					vertex.x = vertex.x / Registry.ratio;
-					vertex.y = vertex.y / Registry.ratio;
-					polyVerts.push(new B2Vec2(vertex.x, vertex.y));
-				}
-				
-				polyShape.setAsArray(polyVerts);
-				
-				polyDef.shape = polyShape;
-				
-				p_body.createFixture(polyDef);
-			}
-		}
-		
-		
-	}
 	
 	private function addCubes():Void 
 	{

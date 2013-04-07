@@ -8,7 +8,7 @@ import org.flixel.FlxText;
  */
 class Registry
 {
-	public static var ratio:Float = 30.0;
+	public static var ratio:Float = 10.0;
 	
 	public static var debugSprite:Sprite;
 	
