@@ -5,6 +5,7 @@ package ;
  * @author Mike Cugley
  */
 
+import box2D.collision.shapes.B2MassData;
 import box2D.collision.shapes.B2PolygonShape;
 import box2D.common.math.B2Vec2;
 import box2D.dynamics.B2Body;
@@ -12,6 +13,8 @@ import box2D.dynamics.B2BodyDef;
 import box2D.dynamics.B2FixtureDef;
 import box2D.dynamics.B2World;
 import org.flixel.FlxG;
+import org.flixel.FlxParticle;
+import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxU;
  
@@ -39,64 +42,66 @@ class Lander extends FlxSprite
 		height = Height;
 		_world = w;
 		
-		makeGraphic(FlxU.floor(Width), FlxU.floor(Height), 0x00000000);
+		loadGraphic("assets/data/Lander.png", false); 
 		
 	}
 	
 	override public function update():Void
 	{
-		var upperJet:B2Vec2 = new B2Vec2(0, -2.5);
-		var lowerJet:B2Vec2 = new B2Vec2(0, -1.5);
-		
-		
-		var B2angle:Float = _obj.getAngle();
-		var upThrustAngle:Float;
-		var rightThrustAngle:Float;
-		var leftThrustAngle:Float;
-		var downThrustAngle:Float;
-		
-		var upThrustVec:B2Vec2;
-		var rightThrustVec:B2Vec2;
-		var leftThrustVec:B2Vec2;
-		var downThrustVec:B2Vec2;
-		
-		upThrustAngle = B2angle - (Math.PI / 2);
-		rightThrustAngle = B2angle;
-		leftThrustAngle = B2angle + Math.PI;
-		downThrustAngle = B2angle + (Math.PI / 2);
-		
-		var upThrustVec:B2Vec2 = new B2Vec2(Math.cos(upThrustAngle), Math.sin(upThrustAngle));
-		var rightThrustVec:B2Vec2 = new B2Vec2(Math.cos(rightThrustAngle), Math.sin(rightThrustAngle));
-		var leftThrustVec:B2Vec2 = new B2Vec2(Math.cos(leftThrustAngle), Math.sin(leftThrustAngle));
-		var downThrustVec:B2Vec2 = new B2Vec2(Math.cos(downThrustAngle), Math.sin(downThrustAngle));
-		
-		if (FlxG.keys.pressed("SPACE"))
-		{
-			upThrustVec.multiply(10);
-			_obj.applyForce(upThrustVec, _obj.getWorldCenter());
-			Registry.debugString.text = "Space! " + upThrustVec.length();
-		}
-		else
-		{
-			Registry.debugString.text = "No Space! " + upThrustVec.length();
-		}
-		
-		if (FlxG.keys.pressed("A"))
-		{
-			_obj.applyForce(leftThrustVec, _obj.getWorldPoint(upperJet));
-			_obj.applyForce(rightThrustVec, _obj.getWorldPoint(lowerJet));
-		}
-		
-		if (FlxG.keys.pressed("D"))
-		{
-			_obj.applyForce(rightThrustVec, _obj.getWorldPoint(upperJet));
-			_obj.applyForce(leftThrustVec, _obj.getWorldPoint(lowerJet));
-		}
-		
-		
+		//var upperJet:B2Vec2 = new B2Vec2(0, -2.5);
+		//var lowerJet:B2Vec2 = new B2Vec2(0, -1.5);
+		//
+		//
+		//var B2angle:Float = _obj.getAngle();
+		//var upThrustAngle:Float;
+		//var rightThrustAngle:Float;
+		//var leftThrustAngle:Float;
+		//var downThrustAngle:Float;
+		//
+		//var upThrustVec:B2Vec2;
+		//var rightThrustVec:B2Vec2;
+		//var leftThrustVec:B2Vec2;
+		//var downThrustVec:B2Vec2;
+		//
+		//upThrustAngle = B2angle - (Math.PI / 2);
+		//rightThrustAngle = B2angle;
+		//leftThrustAngle = B2angle + Math.PI;
+		//downThrustAngle = B2angle + (Math.PI / 2);
+		//
+		//var upThrustVec:B2Vec2 = new B2Vec2(Math.cos(upThrustAngle), Math.sin(upThrustAngle));
+		//var rightThrustVec:B2Vec2 = new B2Vec2(Math.cos(rightThrustAngle), Math.sin(rightThrustAngle));
+		//var leftThrustVec:B2Vec2 = new B2Vec2(Math.cos(leftThrustAngle), Math.sin(leftThrustAngle));
+		//var downThrustVec:B2Vec2 = new B2Vec2(Math.cos(downThrustAngle), Math.sin(downThrustAngle));
+		//
+		//if (FlxG.keys.pressed("SPACE"))
+		//{
+			//upThrustVec.multiply(10);
+			//_obj.applyForce(upThrustVec, _obj.getWorldCenter());
+			//Registry.debugString.text = "Space! " + upThrustVec.length();
+		//}
+		//else
+		//{
+			//Registry.debugString.text = "No Space! " + upThrustVec.length();
+		//}
+		//
+		//if (FlxG.keys.pressed("A"))
+		//{
+			//_obj.applyForce(leftThrustVec, _obj.getWorldPoint(upperJet));
+			//_obj.applyForce(rightThrustVec, _obj.getWorldPoint(lowerJet));
+		//}
+		//
+		//if (FlxG.keys.pressed("D"))
+		//{
+			//_obj.applyForce(rightThrustVec, _obj.getWorldPoint(upperJet));
+			//_obj.applyForce(leftThrustVec, _obj.getWorldPoint(lowerJet));
+		//}
+		//
+		//
 		
 		x = (_obj.getPosition().x * Registry.ratio) -width / 2;
 		y = (_obj.getPosition().y * Registry.ratio) -height / 2;
+		
+		FlxG.camera.focusOn(new FlxPoint(x, y));
 		
 		
 		angle = _obj.getAngle() * (180 / Math.PI);
@@ -104,11 +109,16 @@ class Lander extends FlxSprite
 		Registry.debugString.text += "\nX: " +  FlxU.roundDecimal(_obj.getPosition().x, 3) 
 			+ " Y: " + FlxU.roundDecimal(_obj.getPosition().y, 3);
 		Registry.debugString.text += "\nXV: " + FlxU.roundDecimal(_obj.getLinearVelocity().x, 3) 
-			+ " YV: " + FlxU.roundDecimal(_obj.getLinearVelocity().y,3);
+			+ " YV: " + FlxU.roundDecimal(_obj.getLinearVelocity().y, 3);
+		Registry.debugString.text += "\n" + angle;
+		
+		var massData:B2MassData = new B2MassData();
+		_obj.getMassData(massData);
+		Registry.debugString.text += "\nMass: " + massData.mass;
 		super.update();
 	}
 	
-	public function createBody():Void
+	public function createBody():B2Body
 	{
 		var landerShape:B2PolygonShape = new B2PolygonShape();
 		var waistShape:B2PolygonShape = new B2PolygonShape();
@@ -245,6 +255,8 @@ class Lander extends FlxSprite
 		footShape.setAsVector(pointsArray);
 		_fixDef.shape = footShape;
 		_obj.createFixture(_fixDef);	
+		
+		return(_obj);
 		
 	}
 	

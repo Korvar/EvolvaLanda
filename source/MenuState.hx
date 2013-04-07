@@ -44,7 +44,7 @@ class MenuState extends FlxState
 		
 		if (FlxG.mouse.justPressed())
 		{
-			FlxG.switchState(new PlayState());
+			FlxG.switchState(new NapePlayState());
 		}
 	}	
 }

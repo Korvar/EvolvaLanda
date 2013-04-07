@@ -62,4 +62,12 @@ class B2FlxTileblock extends FlxTileblock
 		super.kill();
 	}
 	
+	override public function update():Void
+	{
+		x = (_obj.getPosition().x * Registry.ratio) -width / 2;
+		y = (_obj.getPosition().y * Registry.ratio) -height / 2;
+		angle = _obj.getAngle() * (180 / Math.PI);
+		
+		super.update();
+	}
 }

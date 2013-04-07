@@ -50,6 +50,9 @@
 	<haxelib name="nme" />
 	<haxelib name="flixel"/>
 	<haxelib name="box2d"/>
+	<haxelib name="nape"/>
+	
+	<haxedef name="NAPE_RELEASE_BUILD"/> 	
 	
     <!--Disable the Flixel core debugger-->
     <!--<set name="FLX_NO_DEBUG" />-->

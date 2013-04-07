@@ -1,6 +1,7 @@
 package ;
 
 import nme.display.Sprite;
+import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxState;
@@ -31,6 +32,7 @@ class PlayState extends FlxState
 	#end
 	
 	public var _world:B2World;
+	var landerBody:B2Body;
 
 	public function new() 
 	{
@@ -42,10 +44,12 @@ class PlayState extends FlxState
 	{
 		#if debug
 		FlxG.watch(this, "messageString");
+
 		
 		var debugString:FlxText = new FlxText(0, 0, FlxG.width, "test");
 		debugString.color = 0xFFFFFF;
 		Registry.debugString = debugString;
+		debugString.scrollFactor = (new FlxPoint(0, 0));
 		add(debugString);
 		#end
 		
@@ -55,11 +59,14 @@ class PlayState extends FlxState
 		
 		// createLandscape();
 		
+	
 		createLander();
+		// FlxG.camera.setBounds( -1000, -1000, 1000, 1000, true);			
+		
 		
 		var floor:B2FlxTileblock = new B2FlxTileblock(0, FlxG.height - 10, FlxG.width, 10, _world);
 		floor.createBody();
-		floor.makeGraphic(FlxG.width, 10, 0xFFFF9900);
+		floor.makeGraphic(FlxU.floor(floor.width), FlxU.floor(floor.height), 0xFFFF9900);
 		add(floor);
 		
 		// addCubes();
@@ -67,6 +74,8 @@ class PlayState extends FlxState
 
 		
 		setupDebugDraw();
+		
+
 
 	}
 
@@ -161,8 +170,9 @@ class PlayState extends FlxState
 	function createLander()
 	{
 		var lander:Lander = new Lander(320, 0, 7 * Registry.ratio, 5 * Registry.ratio, _world);
-		lander.createBody();
+		landerBody = lander.createBody();
 		add(lander);
+		FlxG.camera.follow(lander, FlxCamera.STYLE_LOCKON);
 	}
 	
 	private function setupWorld():Void
@@ -191,6 +201,8 @@ class PlayState extends FlxState
 	
 	override public function update():Void
 	{
+		updateLander();
+		
 		_world.step(FlxG.elapsed, 10, 10);
 		_world.drawDebugData();
 		super.update();
@@ -199,5 +211,65 @@ class PlayState extends FlxState
 		{
 			FlxG.switchState(new PlayState());
 		}
+		
+		if (FlxG.keys.justPressed("N"))
+		{
+			FlxG.switchState(new NapePlayState());
+		}
+		
+		
+	}
+	
+	function updateLander():Void
+	{
+		var upperJet:B2Vec2 = new B2Vec2(0, -2.5);
+		var lowerJet:B2Vec2 = new B2Vec2(0, -1.5);
+		
+		
+		var B2angle:Float = landerBody.getAngle();
+		var upThrustAngle:Float;
+		var rightThrustAngle:Float;
+		var leftThrustAngle:Float;
+		var downThrustAngle:Float;
+		
+		var upThrustVec:B2Vec2;
+		var rightThrustVec:B2Vec2;
+		var leftThrustVec:B2Vec2;
+		var downThrustVec:B2Vec2;
+		
+		upThrustAngle = B2angle - (Math.PI / 2);
+		rightThrustAngle = B2angle;
+		leftThrustAngle = B2angle + Math.PI;
+		downThrustAngle = B2angle + (Math.PI / 2);
+		
+		var upThrustVec:B2Vec2 = new B2Vec2(Math.cos(upThrustAngle), Math.sin(upThrustAngle));
+		var rightThrustVec:B2Vec2 = new B2Vec2(Math.cos(rightThrustAngle), Math.sin(rightThrustAngle));
+		var leftThrustVec:B2Vec2 = new B2Vec2(Math.cos(leftThrustAngle), Math.sin(leftThrustAngle));
+		var downThrustVec:B2Vec2 = new B2Vec2(Math.cos(downThrustAngle), Math.sin(downThrustAngle));
+		
+		if (FlxG.keys.pressed("SPACE"))
+		{
+			upThrustVec.multiply(10);
+			landerBody.applyForce(upThrustVec, landerBody.getWorldCenter());
+			Registry.debugString.text = "Space! " + upThrustVec.length();
+		}
+		else
+		{
+			Registry.debugString.text = "No Space! " + upThrustVec.length();
+		}
+		
+		if (FlxG.keys.pressed("A"))
+		{
+			landerBody.applyForce(leftThrustVec, landerBody.getWorldPoint(upperJet));
+			landerBody.applyForce(rightThrustVec, landerBody.getWorldPoint(lowerJet));
+		}
+		
+		if (FlxG.keys.pressed("D"))
+		{
+			landerBody.applyForce(rightThrustVec, landerBody.getWorldPoint(upperJet));
+			landerBody.applyForce(leftThrustVec, landerBody.getWorldPoint(lowerJet));
+		}
+		
+		
 	}
 }
