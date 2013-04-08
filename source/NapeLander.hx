@@ -77,40 +77,21 @@ class NapeLander extends FlxPhysSprite
 		body.shapes.add(lowerLanderShape);
 
 		// Struts
-		var strut1:FlxPhysSprite = new  FlxPhysSprite(x - 25 , y + 10);
 		pointsArray = new Array<Vec2>();
 		pointsArray[0] = new Vec2( 6.25, -3.85);	
 		pointsArray[1] = new Vec2( -2.5, 5);
 		pointsArray[2] = new Vec2(-5, 5);			
 		pointsArray[3] = new Vec2( 5, -5);
+		createStrut(x - 25 , y + 10, pointsArray, landerMaterial, Vec2.weak( -20, 5), Vec2.weak(5, -5));
 		
-		strut1.body.shapes.add(new Polygon(pointsArray, landerMaterial));
-		strut1.makeGraphic(5, 5, 0xffffffff);
-		FlxG.state.add(strut1);
+		// createStrut(X, Y, pointsArray:Array<Vec2>, material, weldjoin1:Vec2, weldjoin2:Vec2):Void
 		
-		var strut1Weld:WeldJoint = new WeldJoint(body, strut1.body, Vec2.weak( -20, 5), Vec2.weak(5, -5));
-		strut1Weld.active = true;
-		strut1Weld.stiff = true;
-		strut1Weld.frequency = 20.0;
-		strut1Weld.damping = 1.0;
-		strut1Weld.space = body.space;
-		
-		var strut2:FlxPhysSprite = new  FlxPhysSprite(x + 25 , y + 10);
 		pointsArray[3] = new Vec2( -6.25, -3.85);	
 		pointsArray[2] = new Vec2( 2.5, 5);
 		pointsArray[1] = new Vec2(5, 5);			
 		pointsArray[0] = new Vec2( -5, -5);
+		createStrut(x + 25 , y + 10, pointsArray, landerMaterial, Vec2.weak( 20, 5), Vec2.weak(-5, -5));
 		
-		strut2.body.shapes.add(new Polygon(pointsArray, landerMaterial));
-		strut2.makeGraphic(5, 5, 0xffffffff);
-		FlxG.state.add(strut2);
-		
-		var strut2Weld:WeldJoint = new WeldJoint(body, strut2.body, Vec2.weak( 20, 5), Vec2.weak(-5, -5));
-		strut2Weld.active = true;
-		strut2Weld.stiff = true;
-		strut2Weld.frequency = 20.0;
-		strut2Weld.damping = 1.0;
-		strut2Weld.space = body.space;		
 	
 		//var strutShape:B2PolygonShape = new B2PolygonShape();
 		//strutShape.setAsVector(pointsArray);
@@ -203,5 +184,20 @@ class NapeLander extends FlxPhysSprite
 		body.applyImpulse(body.localVectorToWorld(Vec2.weak(0, thrust))/*, body.localVectorToWorld(Vec2.weak(0, 15))*/);
 		
 		super.update();
+	}
+	
+	private function createStrut(X, Y, pointsArray:Array<Vec2>, material, weldjoin1:Vec2, weldjoin2:Vec2):Void
+	{
+		var strut = new FlxPhysSprite(X, Y);
+		strut.body.shapes.add(new Polygon(pointsArray, material));
+		strut.makeGraphic(5, 5, 0xffffffff);
+		FlxG.state.add(strut);
+		
+		var strutWeld:WeldJoint = new WeldJoint(body, strut.body, weldjoin1, weldjoin2);
+		strutWeld.active = true;
+		strutWeld.stiff = true;
+		strutWeld.frequency = 20.0;
+		strutWeld.damping = 1.0;
+		strutWeld.space = body.space;
 	}
 }
