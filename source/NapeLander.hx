@@ -82,16 +82,18 @@ class NapeLander extends FlxPhysSprite
 		pointsArray[1] = new Vec2( -2.5, 5);
 		pointsArray[2] = new Vec2(-5, 5);			
 		pointsArray[3] = new Vec2( 5, -5);
-		createStrut(x - 25 , y + 10, pointsArray, landerMaterial, Vec2.weak( -20, 5), Vec2.weak(5, -5));
+		var strut1:FlxPhysSprite = createStrut(x - 25 , y + 10, pointsArray, landerMaterial);
+		weldStrut(body, strut1.body, Vec2.weak( -20, 5), Vec2.weak(5, -5));
 		
+		// private function weldStrut(body1:Body, body2:Body, weldjoin1:Vec2, weldjoin2:Vec2):Void 
 		// createStrut(X, Y, pointsArray:Array<Vec2>, material, weldjoin1:Vec2, weldjoin2:Vec2):Void
 		
 		pointsArray[3] = new Vec2( -6.25, -3.85);	
 		pointsArray[2] = new Vec2( 2.5, 5);
 		pointsArray[1] = new Vec2(5, 5);			
 		pointsArray[0] = new Vec2( -5, -5);
-		createStrut(x + 25 , y + 10, pointsArray, landerMaterial, Vec2.weak( 20, 5), Vec2.weak(-5, -5));
-		
+		var strut2:FlxPhysSprite = createStrut(x + 25 , y + 10, pointsArray, landerMaterial);
+		weldStrut(body, strut2.body, Vec2.weak( 20, 5), Vec2.weak(-5, -5));
 	
 		//var strutShape:B2PolygonShape = new B2PolygonShape();
 		//strutShape.setAsVector(pointsArray);
@@ -186,14 +188,19 @@ class NapeLander extends FlxPhysSprite
 		super.update();
 	}
 	
-	private function createStrut(X, Y, pointsArray:Array<Vec2>, material, weldjoin1:Vec2, weldjoin2:Vec2):Void
+	private function createStrut(X, Y, pointsArray:Array<Vec2>, material):FlxPhysSprite
 	{
 		var strut = new FlxPhysSprite(X, Y);
 		strut.body.shapes.add(new Polygon(pointsArray, material));
 		strut.makeGraphic(5, 5, 0xffffffff);
 		FlxG.state.add(strut);
 		
-		var strutWeld:WeldJoint = new WeldJoint(body, strut.body, weldjoin1, weldjoin2);
+		return (strut);
+	}
+	
+	private function weldStrut(body1:Body, body2:Body, weldjoin1:Vec2, weldjoin2:Vec2):Void 
+	{
+		var strutWeld:WeldJoint = new WeldJoint(body1, body2, weldjoin1, weldjoin2);
 		strutWeld.active = true;
 		strutWeld.stiff = true;
 		strutWeld.frequency = 20.0;
