@@ -47,7 +47,7 @@ class NapeLander extends FlxPhysSprite
 		upperJetEmitter = new FlxEmitter(x + (width / 2), y + (height / 2) - 25 * multiplier);
 		mainEngineEmitter = new FlxEmitter(x + (width / 2), y + (height / 2) + 15 * multiplier);
 		
-		var particles:Int = 50;
+		var particles:Int = 200;
 		
 		for (emitter in [lowerJetEmitter, upperJetEmitter, mainEngineEmitter])
 		{
@@ -59,12 +59,11 @@ class NapeLander extends FlxPhysSprite
 				emitter.add(particle);
 			}
 			FlxG.state.add(emitter);
-			emitter.lifespan = 1;
-			emitter.frequency = 0.1;
+			emitter.start(false, 0.5,0.05);
+			emitter.on = false;
 			// emitter.start(false, 1.0);
 		}
-		mainEngineEmitter.start(false, 1.0);
-		mainEngineEmitter.on = false;
+
 	}
 	
 	public function createBody():Void
@@ -243,6 +242,20 @@ class NapeLander extends FlxPhysSprite
 		
 		thrust = FlxU.bound(thrust, -thrustMax, 0);
 		Registry.debugString.text += "\nThrust: " + thrust;
+		
+		var thrustVec:Vec2 = new Vec2(0, thrust);
+		var minThrustVec:Vec2 = new Vec2( -20, -thrust / 5); // These vectors are for the exhaust particles, so direction is reversed.
+		var maxThrustVec:Vec2 = new Vec2(20, -thrust / 5);
+		var minThrustWorldVec:Vec2 = body.localVectorToWorld(minThrustVec);
+		var maxThrustWorldVec:Vec2 = body.localVectorToWorld(maxThrustVec);
+		var minX:Float = FlxU.min(minThrustWorldVec.x, maxThrustWorldVec.x);
+		var maxX:Float = FlxU.max(minThrustWorldVec.x, maxThrustWorldVec.x);
+		var minY:Float = FlxU.min(minThrustWorldVec.y, maxThrustWorldVec.y);
+		var maxY:Float = FlxU.max(minThrustWorldVec.y, maxThrustWorldVec.y);
+			
+		mainEngineEmitter.setXSpeed(minX + velocity.x, maxX + velocity.x);
+		mainEngineEmitter.setYSpeed(minY + velocity.y, maxY + velocity.y);
+		
 		
 		if (thrust <  0)
 		{
