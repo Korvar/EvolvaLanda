@@ -64,6 +64,7 @@ class NapeLander extends FlxPhysSprite
 			// emitter.start(false, 1.0);
 		}
 		mainEngineEmitter.start(false, 1.0);
+		mainEngineEmitter.on = false;
 	}
 	
 	public function createBody():Void
@@ -245,9 +246,12 @@ class NapeLander extends FlxPhysSprite
 		
 		if (thrust <  0)
 		{
-			mainEngineEmitter.start(false, 0.1);
+			mainEngineEmitter.on = true;
 		}
-		
+		else
+		{
+			mainEngineEmitter.on = false;
+		}
 		body.applyImpulse(body.localVectorToWorld(Vec2.weak(0, thrust)));
 
 		
