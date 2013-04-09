@@ -3,6 +3,8 @@ package ;
 import org.flixel.FlxG;
 import org.flixel.nape.FlxPhysSprite;
 import org.flixel.nape.FlxPhysState;
+import org.flixel.FlxPoint;
+import org.flixel.FlxText;
 
 /**
  * ...
@@ -18,6 +20,16 @@ class NapePlayState extends FlxPhysState
 	
 	override public function create():Void
 	{ 
+		#if debug
+		FlxG.watch(this, "messageString");
+
+		var debugString:FlxText = new FlxText(0, 0, FlxG.width, "test");
+		debugString.color = 0xFFFFFF;
+		Registry.debugString = debugString;
+		debugString.scrollFactor = (new FlxPoint(0, 0));
+		add(debugString);
+		#end		
+			
 		super.create();
 		FlxG.mouse.show();
 		// Sets gravity.

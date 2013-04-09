@@ -5,9 +5,13 @@ import nape.geom.Vec2;
 import nape.phys.Body;
 import nape.phys.Material;
 import nape.shape.Polygon;
+import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
+import org.flixel.FlxParticle;
 import org.flixel.FlxU;
 import org.flixel.nape.FlxPhysSprite;
+import org.flixel.FlxText;
+import org.flixel.FlxPoint;
 
 /**
  * ...
@@ -17,6 +21,17 @@ class NapeLander extends FlxPhysSprite
 {
 	
 	var thrust:Float = 0.0;
+	var thrustMax:Float = 2000;
+	
+	var maneuverJetThrust:Float = 400;
+	
+	var upperJet:Vec2;
+	var lowerJet:Vec2;
+	
+	var lowerJetEmitter:FlxEmitter;
+	var upperJetEmitter:FlxEmitter;
+	var mainEngineEmitter:FlxEmitter;
+	var multiplier:Float = 3;
 
 	public function new(X:Float=0, Y:Float=0, SimpleGraphic:Dynamic=null, CreateBody:Bool=true) 
 	{
@@ -24,9 +39,31 @@ class NapeLander extends FlxPhysSprite
 		
 		// loadGraphic("assets/data/Lander.png", false); 
 		
-		makeGraphic(70, 50, 0x00000000);
+		makeGraphic(40 * Std.int(multiplier), 40 * Std.int(multiplier), 0x00ffffff);
 		
 		createBody();
+		
+		lowerJetEmitter = new FlxEmitter(x + (width / 2), y + (height / 2) + 15 * multiplier);
+		upperJetEmitter = new FlxEmitter(x + (width / 2), y + (height / 2) - 25 * multiplier);
+		mainEngineEmitter = new FlxEmitter(x + (width / 2), y + (height / 2) + 15 * multiplier);
+		
+		var particles:Int = 50;
+		
+		for (emitter in [lowerJetEmitter, upperJetEmitter, mainEngineEmitter])
+		{
+			for (i in 0...particles)
+			{
+				var particle:FlxParticle = new FlxParticle();
+				particle.makeGraphic(1, 1, 0xffffffff);
+				particle.exists = false;
+				emitter.add(particle);
+			}
+			FlxG.state.add(emitter);
+			emitter.lifespan = 1;
+			emitter.frequency = 0.1;
+			// emitter.start(false, 1.0);
+		}
+		mainEngineEmitter.start(false, 1.0);
 	}
 	
 	public function createBody():Void
@@ -36,7 +73,7 @@ class NapeLander extends FlxPhysSprite
 		var lowerLanderShape:Polygon;
 		var pointsArray:Array<Vec2>;
 		
-		var multiplier:Float = 3;
+
 		
 		var landerMaterial:Material = Material.steel();
 		
@@ -80,6 +117,8 @@ class NapeLander extends FlxPhysSprite
 		lowerLanderShape = new Polygon(pointsArray);
 		lowerLanderShape.material = landerMaterial;
 		body.shapes.add(lowerLanderShape);
+
+		// body.align();
 
 		// Struts
 		pointsArray = new Array<Vec2>();
@@ -146,46 +185,83 @@ class NapeLander extends FlxPhysSprite
 		pointsArray[3] = new Vec2(5.0 * multiplier, 2.5 * multiplier);			
 		var foot2:FlxPhysSprite = createStrut(x + (30 * multiplier), y + (22.5 * multiplier), pointsArray, landerMaterial);
 		weldStrut(strut6.body, foot2.body, Vec2.weak( -0.75 * multiplier, 2.5 * multiplier), Vec2.weak( 0 * multiplier, -2.5 * multiplier));		
+		
+		upperJet = new Vec2(0, -25 * multiplier);
+		lowerJet = new Vec2(0, 15 * multiplier);
+		
 
-
-		//var footShape:B2PolygonShape = new B2PolygonShape();
-		//pointsArray[0] = new Vec2(-3.25, 2.0);
-		//pointsArray[1] = new Vec2(-2.75, 2.0);	
-		//pointsArray[2] = new Vec2(-2.5, 2.5);	
-		//pointsArray[3] = new Vec2( -3.5, 2.5);
-		//
-		//footShape.setAsVector(pointsArray);
-		//_fixDef.shape = footShape;
-		//_obj.createFixture(_fixDef);	
-		//
-		//pointsArray[3] = new Vec2(3.25, 2.0);
-		//pointsArray[2] = new Vec2(2.75, 2.0);	
-		//pointsArray[1] = new Vec2(2.5, 2.5);	
-		//pointsArray[0] = new Vec2(3.5, 2.5);
-		//
-		//footShape.setAsVector(pointsArray);
-		//_fixDef.shape = footShape;
-		//_obj.createFixture(_fixDef);	
-		//
-		//return(_obj);
 		
 	}
 	
 	override public function update():Void
 	{
+		var upperJetVec:Vec2 = body.localVectorToWorld(upperJet);
+		var lowerJetVec:Vec2 = body.localVectorToWorld(lowerJet);
+		
+		mainEngineEmitter.x = x + (width / 2) + lowerJetVec.x;
+		mainEngineEmitter.y = y + (height / 2) + lowerJetVec.y;
+		
+		lowerJetEmitter.x = x + (width / 2) + lowerJetVec.x;
+		lowerJetEmitter.y = y + (height / 2) + lowerJetVec.y;
+		
+		upperJetEmitter.x = x + (width / 2) + upperJetVec.x;
+		upperJetEmitter.y = y + (height / 2) + upperJetVec.y;
+		
+		
+		Registry.debugString.text = "UpperJetVec.X: " + upperJetVec.x + " UpperJetVec.Y: " + upperJetVec.y;
+		Registry.debugString.text += "\nUpperJet.X: " + upperJet.x + " UpperJet.Y: " + upperJet.y;
+		Registry.debugString.text += "\nX: " + x + " Y: " + y;
+		Registry.debugString.text += "\nMouseX: " + FlxG.mouse.x + " MouseY: " + FlxG.mouse.y;
+		
+		
+		mainEngineEmitter.minRotation = angle - 5;
+		mainEngineEmitter.maxRotation = angle + 5;
+		
+		
 		if (FlxG.keys.pressed("UP") || FlxG.keys.pressed("W"))
 		{
-			thrust -= 10;
+			thrust -= 50;
 		}
 		
 		if (FlxG.keys.pressed("DOWN") || FlxG.keys.pressed("S"))
 		{
-			thrust += 10;
+			thrust += 50;
 		}
 		
-		thrust = FlxU.bound(thrust, -1000, 0);
+		if (FlxG.keys.pressed("LEFT") || FlxG.keys.pressed("A"))
+		{
+			body.applyImpulse(body.localVectorToWorld(Vec2.weak(-maneuverJetThrust, 0)), upperJetVec);
+			body.applyImpulse(body.localVectorToWorld(Vec2.weak(maneuverJetThrust, 0)), lowerJetVec);
+		}
 		
-		body.applyImpulse(body.localVectorToWorld(Vec2.weak(0, thrust))/*, body.localVectorToWorld(Vec2.weak(0, 15))*/);
+		if (FlxG.keys.pressed("RIGHT") || FlxG.keys.pressed("D"))
+		{
+			body.applyImpulse(body.localVectorToWorld(Vec2.weak(maneuverJetThrust, 0)), upperJetVec);
+			body.applyImpulse(body.localVectorToWorld(Vec2.weak(-maneuverJetThrust, 0)), lowerJetVec);
+		}		
+		
+		thrust = FlxU.bound(thrust, -thrustMax, 0);
+		Registry.debugString.text += "\nThrust: " + thrust;
+		
+		if (thrust <  0)
+		{
+			mainEngineEmitter.start(false, 0.1);
+		}
+		
+		body.applyImpulse(body.localVectorToWorld(Vec2.weak(0, thrust)));
+
+		
+		if (FlxG.keys.pressed("Z"))
+		{
+			if (FlxG.camera.zoom == 1)
+			{
+				FlxG.camera.zoom = 0.5;
+			}
+			else
+			{
+				FlxG.camera.zoom = 1;
+			}
+		}
 		
 		super.update();
 	}
