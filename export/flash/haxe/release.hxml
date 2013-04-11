@@ -1,7 +1,6 @@
 -main ApplicationMain 
 -lib nme
 -lib flixel
--lib box2d
 -lib nape
 -cp source
 -cp src
