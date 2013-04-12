@@ -1,6 +1,8 @@
 package ;
 
+import org.flixel.FlxCamera;
 import org.flixel.FlxG;
+import org.flixel.FlxU;
 import org.flixel.nape.FlxPhysSprite;
 import org.flixel.nape.FlxPhysState;
 import org.flixel.FlxPoint;
@@ -55,6 +57,11 @@ class NapePlayState extends FlxPhysState
 		add(landscape);
 		
 		focusPoint = new FlxPoint(lander.x, lander.y);
+		
+		var minimapCamera:FlxCamera = new FlxCamera(FlxU.floor(FlxG.width * 3 / 4), 0, FlxU.floor(FlxG.width / 2), FlxU.floor(FlxG.height / 2), 0.5);
+		minimapCamera.follow(lander);
+		minimapCamera.setBounds(Registry.worldMinX, Registry.worldMinY, Registry.worldMaxX, Registry.worldMaxY);
+		FlxG.addCamera(minimapCamera);
 	}
 		   
 	override public function update():Void
@@ -64,7 +71,7 @@ class NapePlayState extends FlxPhysState
 		focusPoint.x = lander.x;
 		focusPoint.y = lander.y;
 		
-		FlxG.camera.focusOn(focusPoint);
+		// FlxG.camera.focusOn(focusPoint);
 		 
 		if (FlxG.mouse.justPressed())
 			FlxG.resetState();

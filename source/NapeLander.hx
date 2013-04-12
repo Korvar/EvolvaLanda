@@ -44,7 +44,7 @@ class NapeLander extends FlxPhysSprite
 		
 		// loadGraphic("assets/data/Lander.png", false); 
 		
-		makeGraphic(40 * Std.int(multiplier), 40 * Std.int(multiplier), 0x00ffffff);
+		makeGraphic(40 * Std.int(multiplier), 40 * Std.int(multiplier), 0xccffffff);
 		
 		createBody();
 
