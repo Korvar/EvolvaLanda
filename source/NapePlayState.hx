@@ -47,6 +47,9 @@ class NapePlayState extends FlxPhysState
 		
 		var lander:NapeLander = new NapeLander(FlxG.width / 2, 100);
 		add(lander);
+		
+		var landscape:NapeLandscape = new NapeLandscape(0, 0);
+		add(landscape);
 	}
 		   
 	override public function update():Void
