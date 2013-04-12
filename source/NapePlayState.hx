@@ -17,6 +17,7 @@ class NapePlayState extends FlxPhysState
 
 	var lander:NapeLander;
 	var focusPoint:FlxPoint;
+	var minimapCamera:FlxCamera;
 	
 	public function new() 
 	{
@@ -41,13 +42,14 @@ class NapePlayState extends FlxPhysState
 		// FlxPhysState shortcut to create bondaries around game area. 
 		createWalls(Registry.worldMinX, Registry.worldMinY, Registry.worldMaxX, Registry.worldMaxY);
 		// Creates 50 FlxPhysSprites randomly positioned.
-		//for (i in 0...50) 
-		//{
-			//var startX = 30 + Std.random(FlxG.width - 60); // initial x between 30 and 370.
-			//var startY = 30 + Std.random(FlxG.height - 60); // initial y between 30 and 370.
-		   //
-			//add ( new FlxPhysSprite(startX, startY ));
-		//}
+		for (i in 0...50) 
+		{
+			var startX = 30 + Std.random(FlxG.width - 60); // initial x between 30 and 370.
+			var startY = 30 + Std.random(FlxG.height - 60); // initial y between 30 and 370.
+		   var newSprite:FlxPhysSprite = new FlxPhysSprite(startX, startY );
+		   newSprite.makeGraphic(32, 32, 0xFFFFFFFF);
+			add (newSprite);
+		}
 		
 		lander = new NapeLander(FlxG.width / 2, 100);
 		add(lander);
@@ -58,10 +60,11 @@ class NapePlayState extends FlxPhysState
 		
 		focusPoint = new FlxPoint(lander.x, lander.y);
 		
-		var minimapCamera:FlxCamera = new FlxCamera(FlxU.floor(FlxG.width * 3 / 4), 0, FlxU.floor(FlxG.width / 2), FlxU.floor(FlxG.height / 2), 0.5);
+		minimapCamera = new FlxCamera(FlxU.floor(FlxG.width * 3 / 4), 0, FlxU.floor(FlxG.width / 2), FlxU.floor(FlxG.height / 2), 0.5);
 		minimapCamera.follow(lander);
 		minimapCamera.setBounds(Registry.worldMinX, Registry.worldMinY, Registry.worldMaxX, Registry.worldMaxY);
 		FlxG.addCamera(minimapCamera);
+		minimapCamera.color = 0xFFCCCC;
 	}
 		   
 	override public function update():Void
@@ -71,7 +74,8 @@ class NapePlayState extends FlxPhysState
 		focusPoint.x = lander.x;
 		focusPoint.y = lander.y;
 		
-		// FlxG.camera.focusOn(focusPoint);
+		minimapCamera.focusOn(focusPoint);
+		
 		 
 		if (FlxG.mouse.justPressed())
 			FlxG.resetState();
