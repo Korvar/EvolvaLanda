@@ -27,11 +27,13 @@ class NapeLander extends FlxPhysSprite
 	
 	var upperJet:Vec2;
 	var lowerJet:Vec2;
+	var mainEngineJet:Vec2;
 	
 	var lowerJetEmitter:FlxEmitter;
 	var upperJetEmitter:FlxEmitter;
 	var mainEngineEmitter:FlxEmitter;
 	var multiplier:Float = 3;
+	var mainEngineEmitterWidth = 20;
 
 	public function new(X:Float=0, Y:Float=0, SimpleGraphic:Dynamic=null, CreateBody:Bool=true) 
 	{
@@ -42,12 +44,12 @@ class NapeLander extends FlxPhysSprite
 		makeGraphic(40 * Std.int(multiplier), 40 * Std.int(multiplier), 0x00ffffff);
 		
 		createBody();
-		
-		lowerJetEmitter = new FlxEmitter(x + (width / 2), y + (height / 2) + 15 * multiplier);
-		upperJetEmitter = new FlxEmitter(x + (width / 2), y + (height / 2) - 25 * multiplier);
-		mainEngineEmitter = new FlxEmitter(x + (width / 2), y + (height / 2) + 15 * multiplier);
-		
+
 		var particles:Int = 200;
+		
+		lowerJetEmitter = new FlxEmitter(x + (width / 2), y + (height / 2) + 15 * multiplier, particles);
+		upperJetEmitter = new FlxEmitter(x + (width / 2), y + (height / 2) - 25 * multiplier, particles);
+		mainEngineEmitter = new FlxEmitter(x + (width / 2), y + (height / 2) + 15 * multiplier, particles);
 		
 		for (emitter in [lowerJetEmitter, upperJetEmitter, mainEngineEmitter])
 		{
@@ -63,6 +65,8 @@ class NapeLander extends FlxPhysSprite
 			emitter.on = false;
 			// emitter.start(false, 1.0);
 		}
+		mainEngineEmitter.width = mainEngineEmitterWidth;
+		mainEngineEmitter.height = mainEngineEmitterWidth;
 
 	}
 	
@@ -159,9 +163,7 @@ class NapeLander extends FlxPhysSprite
 		var strut5:FlxPhysSprite = createStrut(x - (30 * multiplier), y + (17.5 * multiplier), pointsArray, landerMaterial);
 		weldStrut(strut1.body, strut5.body, Vec2.weak( -5.0 * multiplier, 5.0 * multiplier), Vec2.weak(0 * multiplier, -2.5 * multiplier));		
 		weldStrut(strut3.body, strut5.body, Vec2.weak( -7.5 * multiplier, 0.0 * multiplier), Vec2.weak(2.5 * multiplier, -2.5 * multiplier));		
-		
-		
-		
+	
 		pointsArray[0] = new Vec2(1 * multiplier, -2.5 * multiplier);
 		pointsArray[1] = new Vec2(-2.5 * multiplier,  -2.5 * multiplier);	
 		pointsArray[2] = new Vec2(-2.5 * multiplier, 2.5 * multiplier);	
@@ -170,24 +172,24 @@ class NapeLander extends FlxPhysSprite
 		weldStrut(strut2.body, strut6.body, Vec2.weak( 5.0 * multiplier, 5.0 * multiplier), Vec2.weak( 0 * multiplier, -2.5 * multiplier));		
 		weldStrut(strut4.body, strut6.body, Vec2.weak( 7.5 * multiplier, 0.0 * multiplier), Vec2.weak(-2.5 * multiplier, -2.5 * multiplier));		
 
-	
 		//Feet!
 		pointsArray[0] = new Vec2(2.5 * multiplier, -2.5 * multiplier);
 		pointsArray[1] = new Vec2(-2.5 * multiplier,  -2.5 * multiplier);	
 		pointsArray[2] = new Vec2(-5.0 * multiplier, 2.5 * multiplier);	
 		pointsArray[3] = new Vec2(5.0 * multiplier, 2.5 * multiplier);		
 		var foot1:FlxPhysSprite = createStrut(x - (30 * multiplier), y + (22.5 * multiplier), pointsArray, landerMaterial);
-		weldStrut(strut5.body, foot1.body, Vec2.weak( 0.75 * multiplier, 2.5 * multiplier), Vec2.weak( 0 * multiplier, -2.5 * multiplier));		
+		weldStrut(strut5.body, foot1.body, Vec2.weak( 0.0 * multiplier, 2.5 * multiplier), Vec2.weak( 0 * multiplier, -2.5 * multiplier));		
 
 		pointsArray[0] = new Vec2(2.5 * multiplier, -2.5 * multiplier);
 		pointsArray[1] = new Vec2(-2.5 * multiplier,  -2.5 * multiplier);	
 		pointsArray[2] = new Vec2(-5.0 * multiplier, 2.5 * multiplier);	
 		pointsArray[3] = new Vec2(5.0 * multiplier, 2.5 * multiplier);			
 		var foot2:FlxPhysSprite = createStrut(x + (30 * multiplier), y + (22.5 * multiplier), pointsArray, landerMaterial);
-		weldStrut(strut6.body, foot2.body, Vec2.weak( -0.75 * multiplier, 2.5 * multiplier), Vec2.weak( 0 * multiplier, -2.5 * multiplier));		
+		weldStrut(strut6.body, foot2.body, Vec2.weak( 0.0 * multiplier, 2.5 * multiplier), Vec2.weak( 0 * multiplier, -2.5 * multiplier));		
 		
 		upperJet = new Vec2(0, -25 * multiplier);
 		lowerJet = new Vec2(0, 15 * multiplier);
+		mainEngineJet = new Vec2(lowerJet.x - (mainEngineEmitterWidth / 2), lowerJet.y);
 		
 
 		
@@ -198,8 +200,10 @@ class NapeLander extends FlxPhysSprite
 		var upperJetVec:Vec2 = body.localVectorToWorld(upperJet);
 		var lowerJetVec:Vec2 = body.localVectorToWorld(lowerJet);
 		
-		mainEngineEmitter.x = x + (width / 2) + lowerJetVec.x;
-		mainEngineEmitter.y = y + (height / 2) + lowerJetVec.y;
+		var mainEngineJetVec:Vec2 = body.localVectorToWorld(lowerJet);
+		
+		mainEngineEmitter.x = x + (width / 2) + mainEngineJetVec.x - (mainEngineEmitter.width / 2);
+		mainEngineEmitter.y = y + (height / 2) + mainEngineJetVec.y - (mainEngineEmitter.height / 2);
 		
 		lowerJetEmitter.x = x + (width / 2) + lowerJetVec.x;
 		lowerJetEmitter.y = y + (height / 2) + lowerJetVec.y;
@@ -253,9 +257,15 @@ class NapeLander extends FlxPhysSprite
 		var minY:Float = FlxU.min(minThrustWorldVec.y, maxThrustWorldVec.y);
 		var maxY:Float = FlxU.max(minThrustWorldVec.y, maxThrustWorldVec.y);
 			
-		mainEngineEmitter.setXSpeed(minX + velocity.x, maxX + velocity.x);
-		mainEngineEmitter.setYSpeed(minY + velocity.y, maxY + velocity.y);
+		mainEngineEmitter.setXSpeed(minX + body.velocity.x, maxX + body.velocity.x);
+		mainEngineEmitter.setYSpeed(minY + body.velocity.y, maxY + body.velocity.y);
 		
+		#if debug
+		Registry.debugString.text += "\nXV: " + FlxU.roundDecimal(velocity.x, 3) 
+			+ " YV: " + FlxU.roundDecimal(velocity.y, 3);
+		Registry.debugString.text += "\nXV: " + FlxU.roundDecimal(body.velocity.x, 3) 
+			+ " YV: " + FlxU.roundDecimal(body.velocity.y, 3);
+		#end
 		
 		if (thrust <  0)
 		{

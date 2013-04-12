@@ -21,7 +21,7 @@ class NapePlayState extends FlxPhysState
 	override public function create():Void
 	{ 
 		#if debug
-		FlxG.watch(this, "messageString");
+		// FlxG.watch(this, "messageString");
 
 		var debugString:FlxText = new FlxText(0, 0, FlxG.width, "test");
 		debugString.color = 0xFFFFFF;
