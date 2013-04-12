@@ -20,10 +20,13 @@ import org.flixel.FlxPoint;
 class NapeLander extends FlxPhysSprite
 {
 	
-	var thrust:Float = 0.0;
-	var thrustMax:Float = 2000;
+	var multiplier:Float = 1;
 	
-	var maneuverJetThrust:Float = 400;
+	var thrust:Float = 0.0;
+	var thrustMax:Float = 1500;
+	
+	var maneuverJetThrust:Float = 30;
+	var thrustDelta:Float = 20;
 	
 	var upperJet:Vec2;
 	var lowerJet:Vec2;
@@ -32,8 +35,8 @@ class NapeLander extends FlxPhysSprite
 	var lowerJetEmitter:FlxEmitter;
 	var upperJetEmitter:FlxEmitter;
 	var mainEngineEmitter:FlxEmitter;
-	var multiplier:Float = 3;
-	var mainEngineEmitterWidth = 20;
+
+	var mainEngineEmitterWidth = 6;
 
 	public function new(X:Float=0, Y:Float=0, SimpleGraphic:Dynamic=null, CreateBody:Bool=true) 
 	{
@@ -41,7 +44,7 @@ class NapeLander extends FlxPhysSprite
 		
 		// loadGraphic("assets/data/Lander.png", false); 
 		
-		makeGraphic(40 * Std.int(multiplier), 40 * Std.int(multiplier), 0x88ffffff);
+		makeGraphic(40 * Std.int(multiplier), 40 * Std.int(multiplier), 0x00ffffff);
 		
 		createBody();
 
@@ -224,12 +227,12 @@ class NapeLander extends FlxPhysSprite
 		
 		if (FlxG.keys.pressed("UP") || FlxG.keys.pressed("W"))
 		{
-			thrust -= 50;
+			thrust -= thrustDelta;
 		}
 		
 		if (FlxG.keys.pressed("DOWN") || FlxG.keys.pressed("S"))
 		{
-			thrust += 50;
+			thrust += thrustDelta;
 		}
 		
 		if (FlxG.keys.pressed("LEFT") || FlxG.keys.pressed("A"))
