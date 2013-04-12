@@ -41,7 +41,7 @@ class NapeLander extends FlxPhysSprite
 		
 		// loadGraphic("assets/data/Lander.png", false); 
 		
-		makeGraphic(40 * Std.int(multiplier), 40 * Std.int(multiplier), 0x00ffffff);
+		makeGraphic(40 * Std.int(multiplier), 40 * Std.int(multiplier), 0x88ffffff);
 		
 		createBody();
 
@@ -213,8 +213,8 @@ class NapeLander extends FlxPhysSprite
 		
 		
 		Registry.debugString.text = "UpperJetVec.X: " + upperJetVec.x + " UpperJetVec.Y: " + upperJetVec.y;
-		Registry.debugString.text += "\nUpperJet.X: " + upperJet.x + " UpperJet.Y: " + upperJet.y;
-		Registry.debugString.text += "\nX: " + x + " Y: " + y;
+		Registry.debugString.text += "\nUpperJet.X: " + FlxU.roundDecimal(upperJet.x, 3) + " UpperJet.Y: " + FlxU.roundDecimal(upperJet.y, 3);
+		Registry.debugString.text += "\nX: " + FlxU.roundDecimal(x, 3) + " Y: " + FlxU.roundDecimal(y, 3);
 		Registry.debugString.text += "\nMouseX: " + FlxG.mouse.x + " MouseY: " + FlxG.mouse.y;
 		
 		

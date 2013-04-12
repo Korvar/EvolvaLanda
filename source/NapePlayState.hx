@@ -13,6 +13,9 @@ import org.flixel.FlxText;
 class NapePlayState extends FlxPhysState
 {
 
+	var lander:NapeLander;
+	var focusPoint:FlxPoint;
+	
 	public function new() 
 	{
 		super();
@@ -21,7 +24,6 @@ class NapePlayState extends FlxPhysState
 	override public function create():Void
 	{ 
 		#if debug
-		// FlxG.watch(this, "messageString");
 
 		var debugString:FlxText = new FlxText(0, 0, FlxG.width, "test");
 		debugString.color = 0xFFFFFF;
@@ -35,7 +37,7 @@ class NapePlayState extends FlxPhysState
 		// Sets gravity.
 		FlxPhysState.space.gravity.setxy(0, 100);  // Moon gravity!
 		// FlxPhysState shortcut to create bondaries around game area. 
-		createWalls();
+		createWalls(Registry.worldMinX, Registry.worldMinY, Registry.worldMaxX, Registry.worldMaxY);
 		// Creates 50 FlxPhysSprites randomly positioned.
 		//for (i in 0...50) 
 		//{
@@ -45,16 +47,24 @@ class NapePlayState extends FlxPhysState
 			//add ( new FlxPhysSprite(startX, startY ));
 		//}
 		
-		var lander:NapeLander = new NapeLander(FlxG.width / 2, 100);
+		lander = new NapeLander(FlxG.width / 2, 100);
 		add(lander);
-		
+		FlxG.camera.follow(lander);
+		FlxG.camera.setBounds(Registry.worldMinX, Registry.worldMinY, Registry.worldMaxX, Registry.worldMaxY, true);		
 		var landscape:NapeLandscape = new NapeLandscape(0, 0);
 		add(landscape);
+		
+		focusPoint = new FlxPoint(lander.x, lander.y);
 	}
 		   
 	override public function update():Void
 	{ 
 		super.update();
+		
+		focusPoint.x = lander.x;
+		focusPoint.y = lander.y;
+		
+		FlxG.camera.focusOn(focusPoint);
 		 
 		if (FlxG.mouse.justPressed())
 			FlxG.resetState();

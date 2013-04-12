@@ -42,8 +42,8 @@ class NapeLandscape extends FlxPhysSprite
 		octave3 = new SmoothNoise(24, arrayLength);
 		octave4 = new SmoothNoise(48, arrayLength);
 		
-		var landscapeLength = FlxG.width;
-		var landscapeHeight = FlxG.height;
+		var landscapeLength = Registry.worldMaxX;
+		var landscapeHeight = Registry.worldMaxY / 2;
 		
 		var lengthRatio:Float = cast(landscapeLength, Float) / cast(arrayLength, Float);
 		var heightRatio:Float = landscapeHeight;
@@ -54,7 +54,7 @@ class NapeLandscape extends FlxPhysSprite
 			noiseValue = (noiseValue * 2) - 1;
 			noiseValue = FlxU.abs(noiseValue);
 			landscapeArray[i] = FlxU.roundDecimal(noiseValue, 3); 
-			pointsArray[i] = new Vec2(i * lengthRatio, noiseValue * heightRatio);
+			pointsArray[i] = new Vec2(i * lengthRatio, (noiseValue * heightRatio) + Registry.worldMaxY / 2);
 		}
 		
 		#if debug
@@ -67,8 +67,8 @@ class NapeLandscape extends FlxPhysSprite
 		
 		#end
 		
-		pointsArray.push(new Vec2(landscapeLength, landscapeHeight));
-		pointsArray.push(new Vec2(0, landscapeHeight));
+		pointsArray.push(new Vec2(landscapeLength, Registry.worldMaxY));
+		pointsArray.push(new Vec2(0, Registry.worldMaxY));
 		
 		pointsArray.reverse();
 		
