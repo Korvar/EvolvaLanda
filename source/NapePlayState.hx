@@ -1,7 +1,9 @@
 package ;
 
+import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
+import org.flixel.FlxGroup;
 import org.flixel.FlxU;
 import org.flixel.nape.FlxPhysSprite;
 import org.flixel.nape.FlxPhysState;
@@ -18,6 +20,14 @@ class NapePlayState extends FlxPhysState
 	var lander:NapeLander;
 	var focusPoint:FlxPoint;
 	var minimapCamera:FlxCamera;
+	
+	var buttonLeft:FlxButton;
+	var buttonRight:FlxButton;
+	var buttonUp:FlxButton;
+	var buttonDown:FlxButton;
+	var buttonA:FlxButton;
+	
+	var hud:FlxGroup;
 	
 	public function new() 
 	{
@@ -47,7 +57,7 @@ class NapePlayState extends FlxPhysState
 			var startX = 30 + Std.random(FlxG.width - 60); // initial x between 30 and 370.
 			var startY = 30 + Std.random(FlxG.height - 60); // initial y between 30 and 370.
 		   var newSprite:FlxPhysSprite = new FlxPhysSprite(startX, startY );
-		   newSprite.makeGraphic(32, 32, 0xFFFFFFFF);
+		   // newSprite.makeGraphic(32, 32, 0xFFFFFFFF);
 			add (newSprite);
 		}
 		
@@ -61,10 +71,37 @@ class NapePlayState extends FlxPhysState
 		focusPoint = new FlxPoint(lander.x, lander.y);
 		
 		minimapCamera = new FlxCamera(FlxU.floor(FlxG.width * 3 / 4), 0, FlxU.floor(FlxG.width / 2), FlxU.floor(FlxG.height / 2), 0.5);
-		minimapCamera.follow(lander);
+		minimapCamera.follow(lander, FlxCamera.STYLE_LOCKON);
 		minimapCamera.setBounds(Registry.worldMinX, Registry.worldMinY, Registry.worldMaxX, Registry.worldMaxY);
 		FlxG.addCamera(minimapCamera);
 		minimapCamera.color = 0xFFCCCC;
+		
+		hud = new FlxGroup();
+		buttonLeft = new FlxButton(10, FlxG.height * 4 / 5, null);
+		buttonRight = new FlxButton(110, FlxG.height * 4 / 5, null);
+		buttonUp = new FlxButton(60, (FlxG.height * 4 / 5) - 50, null);
+		buttonDown = new FlxButton(60, (FlxG.height * 4 / 5) + 50, null);
+		buttonA = new FlxButton(FlxG.width - 60, FlxG.height * 4 / 5, null);
+		buttonLeft.loadGraphic("assets/data/button_left.png", true, false, 44, 45);
+		buttonRight.loadGraphic("assets/data/button_right.png", true, false, 44, 45);
+		buttonUp.loadGraphic("assets/data/button_up.png", true, false, 44, 45);
+		buttonDown.loadGraphic("assets/data/button_down.png", true, false, 44, 45);
+		buttonA.loadGraphic("assets/data/button_a.png", true, false, 44, 45);
+		buttonLeft.scrollFactor = buttonRight.scrollFactor = buttonUp.scrollFactor = buttonDown.scrollFactor = buttonA.scrollFactor = new FlxPoint(0, 0);
+		buttonLeft.alpha = buttonRight.alpha = buttonUp.alpha = buttonDown.alpha = buttonA.alpha = 0.5;
+		hud.add(buttonLeft);
+		hud.add(buttonRight);
+		hud.add(buttonUp);
+		hud.add(buttonDown);
+		hud.add(buttonA);
+		
+		Registry.buttonUp = buttonUp;
+		Registry.buttonDown = buttonDown;
+		Registry.buttonLeft = buttonLeft;
+		Registry.buttonRight = buttonRight;
+		
+		
+		add(hud);
 	}
 		   
 	override public function update():Void
@@ -77,7 +114,7 @@ class NapePlayState extends FlxPhysState
 		minimapCamera.focusOn(focusPoint);
 		
 		 
-		if (FlxG.mouse.justPressed())
+		if (buttonA.status == FlxButton.PRESSED)
 			FlxG.resetState();
 	}
 }

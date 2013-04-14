@@ -1,5 +1,6 @@
 package ;
 import nme.display.Sprite;
+import org.flixel.FlxButton;
 import org.flixel.FlxText;
 
 /**
@@ -21,6 +22,11 @@ class Registry
 	public static var worldMaxX:Float = 2000;
 	public static var worldMinY:Float = 0;
 	public static var worldMaxY:Float = 2000;
+	
+	public static var buttonUp:FlxButton;
+	public static var buttonDown:FlxButton;
+	public static var buttonLeft:FlxButton;
+	public static var buttonRight:FlxButton;
 
 	public function new() 
 	{

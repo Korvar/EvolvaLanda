@@ -5,6 +5,7 @@ import nape.geom.Vec2;
 import nape.phys.Body;
 import nape.phys.Material;
 import nape.shape.Polygon;
+import org.flixel.FlxButton;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxParticle;
@@ -44,7 +45,7 @@ class NapeLander extends FlxPhysSprite
 		
 		// loadGraphic("assets/data/Lander.png", false); 
 		
-		makeGraphic(40 * Std.int(multiplier), 40 * Std.int(multiplier), 0xccffffff);
+		//makeGraphic(40 * Std.int(multiplier), 40 * Std.int(multiplier), 0xccffffff);
 		
 		createBody();
 
@@ -214,41 +215,43 @@ class NapeLander extends FlxPhysSprite
 		upperJetEmitter.x = x + (width / 2) + upperJetVec.x;
 		upperJetEmitter.y = y + (height / 2) + upperJetVec.y;
 		
-		
+		#if debug
 		Registry.debugString.text = "UpperJetVec.X: " + upperJetVec.x + " UpperJetVec.Y: " + upperJetVec.y;
 		Registry.debugString.text += "\nUpperJet.X: " + FlxU.roundDecimal(upperJet.x, 3) + " UpperJet.Y: " + FlxU.roundDecimal(upperJet.y, 3);
 		Registry.debugString.text += "\nX: " + FlxU.roundDecimal(x, 3) + " Y: " + FlxU.roundDecimal(y, 3);
 		Registry.debugString.text += "\nMouseX: " + FlxG.mouse.x + " MouseY: " + FlxG.mouse.y;
-		
+		#end
 		
 		mainEngineEmitter.minRotation = angle - 5;
 		mainEngineEmitter.maxRotation = angle + 5;
 		
 		
-		if (FlxG.keys.pressed("UP") || FlxG.keys.pressed("W"))
+		if (FlxG.keys.pressed("UP") || FlxG.keys.pressed("W") || Registry.buttonUp.status == FlxButton.PRESSED)
 		{
 			thrust -= thrustDelta;
 		}
 		
-		if (FlxG.keys.pressed("DOWN") || FlxG.keys.pressed("S"))
+		if (FlxG.keys.pressed("DOWN") || FlxG.keys.pressed("S") || Registry.buttonDown.status == FlxButton.PRESSED)
 		{
 			thrust += thrustDelta;
 		}
 		
-		if (FlxG.keys.pressed("LEFT") || FlxG.keys.pressed("A"))
+		if (FlxG.keys.pressed("LEFT") || FlxG.keys.pressed("A") || Registry.buttonLeft.status == FlxButton.PRESSED)
 		{
 			body.applyImpulse(body.localVectorToWorld(Vec2.weak(-maneuverJetThrust, 0)), upperJetVec);
 			body.applyImpulse(body.localVectorToWorld(Vec2.weak(maneuverJetThrust, 0)), lowerJetVec);
 		}
 		
-		if (FlxG.keys.pressed("RIGHT") || FlxG.keys.pressed("D"))
+		if (FlxG.keys.pressed("RIGHT") || FlxG.keys.pressed("D") || Registry.buttonRight.status == FlxButton.PRESSED)
 		{
 			body.applyImpulse(body.localVectorToWorld(Vec2.weak(maneuverJetThrust, 0)), upperJetVec);
 			body.applyImpulse(body.localVectorToWorld(Vec2.weak(-maneuverJetThrust, 0)), lowerJetVec);
 		}		
 		
 		thrust = FlxU.bound(thrust, -thrustMax, 0);
+		#if debug
 		Registry.debugString.text += "\nThrust: " + thrust;
+		#end
 		
 		var thrustVec:Vec2 = new Vec2(0, thrust);
 		var minThrustVec:Vec2 = new Vec2( -20, -thrust / 5); // These vectors are for the exhaust particles, so direction is reversed.
