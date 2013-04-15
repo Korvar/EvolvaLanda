@@ -45,7 +45,8 @@ class NapeLander extends FlxPhysSprite
 		
 		// loadGraphic("assets/data/Lander.png", false); 
 		
-		//makeGraphic(40 * Std.int(multiplier), 40 * Std.int(multiplier), 0xccffffff);
+		makeGraphic(40 * Std.int(multiplier), 40 * Std.int(multiplier), 0xccffffff);
+		// offset = new FlxPoint(0, 10);
 		
 		createBody();
 
@@ -283,18 +284,7 @@ class NapeLander extends FlxPhysSprite
 		}
 		body.applyImpulse(body.localVectorToWorld(Vec2.weak(0, thrust)));
 
-		
-		if (FlxG.keys.pressed("Z"))
-		{
-			if (FlxG.camera.zoom == 1)
-			{
-				FlxG.camera.zoom = 0.5;
-			}
-			else
-			{
-				FlxG.camera.zoom = 1;
-			}
-		}
+
 		
 		super.update();
 	}
@@ -304,7 +294,7 @@ class NapeLander extends FlxPhysSprite
 		var strut = new FlxPhysSprite(X, Y);
 		strut.body.shapes.clear();
 		strut.body.shapes.add(new Polygon(pointsArray, material));
-		strut.makeGraphic(1, 1, 0xffffffff);
+		strut.makeGraphic(FlxU.floor(strut.width), FlxU.floor(strut.height), 0xffffffff);
 		strut.width = 1;
 		strut.height = 1;
 		FlxG.state.add(strut);
