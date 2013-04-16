@@ -55,7 +55,7 @@ class NapePlayState extends FlxPhysState
 		FlxG.mouse.hide();
 		#end
 		// Sets gravity.
-		FlxPhysState.space.gravity.setxy(0, 0);  // Moon gravity!
+		FlxPhysState.space.gravity.setxy(0, 100);  // Moon gravity!
 		// FlxPhysState shortcut to create bondaries around game area. 
 		createWalls(Registry.worldMinX, Registry.worldMinY, Registry.worldMaxX, Registry.worldMaxY);
 		// Creates 50 FlxPhysSprites randomly positioned.
