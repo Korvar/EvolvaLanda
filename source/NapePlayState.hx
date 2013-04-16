@@ -28,6 +28,7 @@ class NapePlayState extends FlxPhysState
 	
 	public var zoomCamera:ZoomCamera;
 	var defaultZoom:Float = 0.6;
+	var landingZoom:Float = 3.0;
 	
 	
 	var hud:FlxGroup;
@@ -71,12 +72,13 @@ class NapePlayState extends FlxPhysState
 			}
 		}
 		
-		lander = new NapeLander(FlxG.width / 2, 100);
+		lander = new NapeLander(1000, 300);
 		add(lander);
 		
 		zoomCamera = new ZoomCamera(0, 0, FlxU.floor(FlxG.width / defaultZoom), FlxU.floor(FlxG.height / defaultZoom), defaultZoom);
 		zoomCamera.targetZoom = defaultZoom;
 		FlxG.camera.zoom = defaultZoom;
+		FlxG.camera.antialiasing = true;
 		//FlxG.resetCameras(zoomCamera);
 		FlxG.camera.follow(lander);
 		zoomCamera.follow(lander);
@@ -172,13 +174,13 @@ class NapePlayState extends FlxPhysState
 		{
 			if (FlxG.camera.zoom == defaultZoom)
 			{
-				FlxG.camera.zoom = 2.0;
-				FlxG.camera.width = FlxU.floor(FlxG.width * 2);
-				FlxG.camera.height = FlxU.floor(FlxG.height * 2);
+				FlxG.camera.zoom = landingZoom;
+				FlxG.camera.width = FlxU.floor(FlxG.width * landingZoom);
+				FlxG.camera.height = FlxU.floor(FlxG.height * landingZoom);
 				FlxG.camera.bgColor = 0xff000000;
 				FlxG.updateCameras();
 				
-				zoomCamera.targetZoom = 2.0;
+				zoomCamera.targetZoom = landingZoom;
 
 			}
 			else

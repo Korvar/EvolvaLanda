@@ -21,7 +21,7 @@ import org.flixel.FlxPoint;
 class NapeLander extends FlxPhysSprite
 {
 	
-	var multiplier:Float = 1;
+	var multiplier:Float = 10;
 	
 	var thrust:Float = 0.0;
 	var thrustMax:Float = 1500;
@@ -45,7 +45,7 @@ class NapeLander extends FlxPhysSprite
 		
 		// loadGraphic("assets/data/Lander.png", false); 
 		
-		makeGraphic(40 * Std.int(multiplier), 40 * Std.int(multiplier), 0xccffffff);
+		makeGraphic(40 * Std.int(multiplier), 50 * Std.int(multiplier), 0x00000000);
 		// offset = new FlxPoint(0, 10);
 		
 		createBody();
@@ -102,6 +102,7 @@ class NapeLander extends FlxPhysSprite
 		pointsArray[7] = new Vec2(15 * multiplier, -5 * multiplier);
 
 		landerShape = new Polygon(pointsArray);
+		drawArray(this, pointsArray);
 		landerShape.material = landerMaterial;
 		body.shapes.add(landerShape);
 		
@@ -112,6 +113,7 @@ class NapeLander extends FlxPhysSprite
 		pointsArray[3] = new Vec2( -15 * multiplier, 0.0 * multiplier);		
 		
 		waistShape = new Polygon(pointsArray);
+		drawArray(this, pointsArray);
 		waistShape.material = landerMaterial;
 		body.shapes.add(waistShape);
 
@@ -124,6 +126,7 @@ class NapeLander extends FlxPhysSprite
 		pointsArray[5] = new Vec2(15 * multiplier, 0.0 * multiplier);
 
 		lowerLanderShape = new Polygon(pointsArray);
+		drawArray(this, pointsArray);
 		lowerLanderShape.material = landerMaterial;
 		body.shapes.add(lowerLanderShape);
 
@@ -131,8 +134,8 @@ class NapeLander extends FlxPhysSprite
 
 		// Struts
 		pointsArray = new Array<Vec2>();
-		pointsArray[0] = new Vec2( 6.25 * multiplier, -3.85 * multiplier);	
-		pointsArray[1] = new Vec2( -2.5 * multiplier, 5 * multiplier);
+		pointsArray[0] = new Vec2( 5.625 * multiplier, -3.75 * multiplier);	
+		pointsArray[1] = new Vec2( -3.125 * multiplier, 5 * multiplier);
 		pointsArray[2] = new Vec2(-5 * multiplier, 5 * multiplier);			
 		pointsArray[3] = new Vec2( 5 * multiplier, -5 * multiplier);
 		var strut1:FlxPhysSprite = createStrut(x - (25 * multiplier), y + (10 * multiplier), pointsArray, landerMaterial);
@@ -161,36 +164,36 @@ class NapeLander extends FlxPhysSprite
 		weldStrut(body, strut4.body, Vec2.weak( 12.5 * multiplier, 12.5 * multiplier), Vec2.weak(-7.5 * multiplier, -2.5 * multiplier));
 		weldStrut(strut2.body, strut4.body, Vec2.weak( 2.5 * multiplier, 5 * multiplier), Vec2.weak( 7.5 * multiplier, 0.0 * multiplier));		
 		
-		pointsArray[0] = new Vec2(2.5 * multiplier, -2.5 * multiplier);
-		pointsArray[1] = new Vec2(-1.0 * multiplier,  -2.5 * multiplier);	
-		pointsArray[2] = new Vec2(-1.0 * multiplier, 2.5 * multiplier);	
-		pointsArray[3] = new Vec2(2.5 * multiplier, 2.5 * multiplier);	
+		pointsArray[0] = new Vec2(1.25 * multiplier, -2.5 * multiplier);
+		pointsArray[1] = new Vec2(-1.25 * multiplier,  -2.5 * multiplier);	
+		pointsArray[2] = new Vec2(-1.25 * multiplier, 2.5 * multiplier);	
+		pointsArray[3] = new Vec2(1.25 * multiplier, 2.5 * multiplier);	
 		var strut5:FlxPhysSprite = createStrut(x - (30 * multiplier), y + (17.5 * multiplier), pointsArray, landerMaterial);
-		weldStrut(strut1.body, strut5.body, Vec2.weak( -5.0 * multiplier, 5.0 * multiplier), Vec2.weak(0 * multiplier, -2.5 * multiplier));		
-		weldStrut(strut3.body, strut5.body, Vec2.weak( -7.5 * multiplier, 0.0 * multiplier), Vec2.weak(2.5 * multiplier, -2.5 * multiplier));		
+		weldStrut(strut1.body, strut5.body, Vec2.weak( -5.625 * multiplier, 5.0 * multiplier), Vec2.weak(-1.25 * multiplier, -2.5 * multiplier));		
+		weldStrut(strut1.body, strut5.body, Vec2.weak( -3.125 * multiplier, 5.0 * multiplier), Vec2.weak(1.25 * multiplier, -2.5 * multiplier));		
 	
-		pointsArray[0] = new Vec2(1 * multiplier, -2.5 * multiplier);
-		pointsArray[1] = new Vec2(-2.5 * multiplier,  -2.5 * multiplier);	
-		pointsArray[2] = new Vec2(-2.5 * multiplier, 2.5 * multiplier);	
-		pointsArray[3] = new Vec2(1 * multiplier, 2.5 * multiplier);		
+		pointsArray[3] = new Vec2(-2.5 * multiplier, -2.5 * multiplier);
+		pointsArray[2] = new Vec2(1.0 * multiplier,  -2.5 * multiplier);	
+		pointsArray[1] = new Vec2(1.0 * multiplier, 2.5 * multiplier);	
+		pointsArray[0] = new Vec2(-2.5 * multiplier, 2.5 * multiplier);			
 		var strut6:FlxPhysSprite = createStrut(x + (30 * multiplier), y + (17.5 * multiplier), pointsArray, landerMaterial);
-		weldStrut(strut2.body, strut6.body, Vec2.weak( 5.0 * multiplier, 5.0 * multiplier), Vec2.weak( 0 * multiplier, -2.5 * multiplier));		
-		weldStrut(strut4.body, strut6.body, Vec2.weak( 7.5 * multiplier, 0.0 * multiplier), Vec2.weak(-2.5 * multiplier, -2.5 * multiplier));		
+		//weldStrut(strut2.body, strut6.body, Vec2.weak( 5.0 * multiplier, 5.0 * multiplier), Vec2.weak( 0 * multiplier, -2.5 * multiplier));		
+		weldStrut(strut2.body, strut6.body, Vec2.weak( 2.5 * multiplier, 5.0 * multiplier), Vec2.weak(-2.5 * multiplier, -2.5 * multiplier));		
 
 		//Feet!
-		pointsArray[0] = new Vec2(2.5 * multiplier, -2.5 * multiplier);
-		pointsArray[1] = new Vec2(-2.5 * multiplier,  -2.5 * multiplier);	
-		pointsArray[2] = new Vec2(-5.0 * multiplier, 2.5 * multiplier);	
-		pointsArray[3] = new Vec2(5.0 * multiplier, 2.5 * multiplier);		
-		var foot1:FlxPhysSprite = createStrut(x - (30 * multiplier), y + (22.5 * multiplier), pointsArray, landerMaterial);
-		weldStrut(strut5.body, foot1.body, Vec2.weak( 0.0 * multiplier, 2.5 * multiplier), Vec2.weak( 0 * multiplier, -2.5 * multiplier));		
+		pointsArray[0] = new Vec2(1.25 * multiplier, -2.5 * multiplier);
+		pointsArray[1] = new Vec2(-1.25 * multiplier,  -2.5 * multiplier);	
+		pointsArray[2] = new Vec2(-3.75 * multiplier, 2.5 * multiplier);	
+		pointsArray[3] = new Vec2(3.75 * multiplier, 2.5 * multiplier);		
+		var foot1:FlxPhysSprite = createStrut(x - (28.75 * multiplier), y + (22.5 * multiplier), pointsArray, landerMaterial);
+		weldStrut(strut5.body, foot1.body, Vec2.weak( -1.25 * multiplier, 2.5 * multiplier), Vec2.weak( -1.25 * multiplier, -2.5 * multiplier));		
 
 		pointsArray[0] = new Vec2(2.5 * multiplier, -2.5 * multiplier);
 		pointsArray[1] = new Vec2(-2.5 * multiplier,  -2.5 * multiplier);	
 		pointsArray[2] = new Vec2(-5.0 * multiplier, 2.5 * multiplier);	
 		pointsArray[3] = new Vec2(5.0 * multiplier, 2.5 * multiplier);			
 		var foot2:FlxPhysSprite = createStrut(x + (30 * multiplier), y + (22.5 * multiplier), pointsArray, landerMaterial);
-		weldStrut(strut6.body, foot2.body, Vec2.weak( 0.0 * multiplier, 2.5 * multiplier), Vec2.weak( 0 * multiplier, -2.5 * multiplier));		
+		weldStrut(strut6.body, foot2.body, Vec2.weak( -2.5 * multiplier, 2.5 * multiplier), Vec2.weak( -2.5 * multiplier, -2.5 * multiplier));		
 		
 		upperJet = new Vec2(0, -25 * multiplier);
 		lowerJet = new Vec2(0, 15 * multiplier);
@@ -294,9 +297,57 @@ class NapeLander extends FlxPhysSprite
 		var strut = new FlxPhysSprite(X, Y);
 		strut.body.shapes.clear();
 		strut.body.shapes.add(new Polygon(pointsArray, material));
-		strut.makeGraphic(FlxU.floor(strut.width), FlxU.floor(strut.height), 0xffffffff);
+		
+		#if debug
+		trace(pointsArray.length);
+		#end
+		
+		var maxX:Float=-2000;
+		var minX:Float = 2000;
+		var minY:Float = 2000;
+		var maxY:Float = -2000;		
+		for (i in 0...pointsArray.length)
+		{
+			if (pointsArray[i].x > maxX)
+			{
+				maxX = pointsArray[i].x;
+			}
+			if (pointsArray[i].x < minX)
+			{
+				minX = pointsArray[i].x;
+			}
+			if (pointsArray[i].y > maxY)
+			{
+				maxY = pointsArray[i].y;
+			}
+			if (pointsArray[i].y < minY)
+			{
+				minY = pointsArray[i].y;
+			}
+		}	
+		#if debug
+		trace("MinX: " + minX + " MaxX: " + maxX + " MinY: " + minY +  " MaxY: " + maxY);	
+		#end
+		
+		var strutWidth:Int;
+		var strutHeight:Int;
+		
+		strutWidth = FlxU.floor(FlxU.max(FlxU.abs(minX), FlxU.abs(maxX)) * 2);
+		strutHeight = FlxU.floor(FlxU.max(FlxU.abs(minY), FlxU.abs(maxY)) * 2);
+		strut.makeGraphic(strutWidth, strutHeight, 0x00000000);
+		
+		drawArray(strut, pointsArray);
+		#if debug
+		trace("----");
+		#end
 		strut.width = 1;
 		strut.height = 1;
+		#if debug
+		//strut.drawLine(0, 0, 0, strutHeight - 1, 0xffff0000);
+		//strut.drawLine(0, strutHeight - 1, strutWidth - 1, strutHeight - 1, 0xffff0000);
+		//strut.drawLine(strutWidth - 1, strutHeight - 1, strutWidth - 1, 0, 0xffff0000);
+		//strut.drawLine(strutWidth - 1, 0, 0, 0, 0xffff0000);
+		#end
 		FlxG.state.add(strut);
 		
 		return (strut);
@@ -310,5 +361,19 @@ class NapeLander extends FlxPhysSprite
 		strutWeld.frequency = 20.0;
 		strutWeld.damping = 1.0;
 		strutWeld.space = body.space;
+	}
+	
+	private function drawArray(sprite:FlxPhysSprite, pointsArray:Array<Vec2>):Void 
+	{
+		for (i in 0...pointsArray.length)
+		{
+			sprite.drawLine(FlxU.floor(pointsArray[i].x + (sprite.width / 2)), FlxU.floor(pointsArray[i].y + (sprite.height / 2)), 
+				FlxU.floor(pointsArray[(i + 1) % pointsArray.length].x + (sprite.width / 2)), FlxU.floor(pointsArray[(i + 1) % pointsArray.length].y + (sprite.height / 2)),
+				0xffffffff, 1);
+			#if debug
+			trace(i + " " + pointsArray[i].x + ", " + pointsArray[i].y + " -> " 
+				+ pointsArray[(i + 1) % pointsArray.length].x + ", " + pointsArray[(i + 1) % pointsArray.length].y);
+			#end
+		}
 	}
 }
