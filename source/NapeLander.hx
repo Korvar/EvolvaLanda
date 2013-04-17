@@ -43,6 +43,8 @@ class NapeLander extends FlxPhysSprite
 	var lowerJetEmitter:FlxEmitter;
 	var upperJetEmitter:FlxEmitter;
 	var mainEngineEmitter:FlxEmitter;
+	
+	var weldStrength:Float = 20;
 
 	var mainEngineEmitterWidth = 6;
 	
@@ -188,14 +190,14 @@ class NapeLander extends FlxPhysSprite
 		#if debug
 		trace("======Strut4======");
 		#end		
-		pointsArray[3] = new Vec2(-6.75 * multiplier, -1.0 * multiplier);
-		pointsArray[2] = new Vec2(6.75 * multiplier,  -1.0 * multiplier);	
-		pointsArray[1] = new Vec2(8.75 * multiplier, 1.0 * multiplier);	
-		pointsArray[0] = new Vec2(-8.75 * multiplier, 1.0 * multiplier);	
+		pointsArray[0] = new Vec2(6.75 * multiplier, -1.0 * multiplier);
+		pointsArray[1] = new Vec2(-6.75 * multiplier,  -1.0 * multiplier);	
+		pointsArray[2] = new Vec2(-8.75 * multiplier, 1.0 * multiplier);	
+		pointsArray[3] = new Vec2(8.75 * multiplier, 1.0 * multiplier);		
 		var strut4:FlxPhysSprite = createStrut(x + (18.75 * multiplier), y + (14 * multiplier), pointsArray, landerMaterial);
-		weldStrut(body, strut4.body, Vec2.weak( 12 * multiplier, 13 * multiplier), pointsArray[3]);
-		weldStrut(body, strut4.body, Vec2.weak( 10 * multiplier, 15 * multiplier), pointsArray[0]);
-		weldStrut(strut1.body, strut4.body, Vec2.weak( 3.125 * multiplier, 5 * multiplier), pointsArray[1]);	
+		weldStrut(body, strut4.body, Vec2.weak( 12 * multiplier, 13 * multiplier), pointsArray[1]);
+		weldStrut(body, strut4.body, Vec2.weak( 10 * multiplier, 15 * multiplier), pointsArray[2]);
+		weldStrut(strut2.body, strut4.body, Vec2.weak( 3.125 * multiplier, 5 * multiplier), pointsArray[3]);	
 		
 		#if debug
 		trace("======Strut5======");
@@ -410,7 +412,7 @@ class NapeLander extends FlxPhysSprite
 		strutWeld.frequency = 20.0;
 		strutWeld.damping = 1.0;
 		strutWeld.space = body.space;
-		strutWeld.maxError = 20;
+		strutWeld.maxError = weldStrength;
 		strutWeld.breakUnderError = true;
 		strutWeld.cbTypes.add(STRUTWELD);
 		
@@ -443,15 +445,41 @@ class NapeLander extends FlxPhysSprite
 	}
 	
 	/**
-	 * Should report back when a constraint breaks.  Doesn't seem to.
+	 * Called when a weld gets broken.  Creates pretty sparks!
 	 * @param	cb	The constraint callback.
 	 */
 	
 	public function breakListener(cb:ConstraintCallback):Void 
 	{
-		var brokenConstraint:Constraint = cb.constraint;
-		Registry.debugString.text += "\nBroken constraint! " + brokenConstraint.toString();
-		trace("Broken constraint! " + brokenConstraint.);
+		var brokenWeld:WeldJoint = cast(cb.constraint, WeldJoint);
+		#if debug
+		Registry.debugString.text += "\nBroken constraint! " + brokenWeld.toString();
+		trace("Broken constraint! ");
+		#end
 		FlxG.score -= 100;
+		
+		var sparks1Vec:Vec2 = brokenWeld.body1.localPointToWorld(brokenWeld.anchor1);
+		var sparks2Vec:Vec2 = brokenWeld.body2.localPointToWorld(brokenWeld.anchor2);
+		
+		#if debug
+		trace(brokenWeld.anchor1.toString() + " " + brokenWeld.anchor2.toString());
+		#end
+		
+		var sparks1:FlxEmitter = new FlxEmitter(sparks1Vec.x, sparks1Vec.y);	
+		var sparks2:FlxEmitter = new FlxEmitter(sparks2Vec.x, sparks2Vec.y);	
+		FlxG.state.add(sparks1);
+		FlxG.state.add(sparks2);
+		for (i in 0...20)
+			{
+				var spark1:FlxParticle = new FlxParticle();
+				var spark2:FlxParticle = new FlxParticle();
+				spark1.makeGraphic(2, 2, 0xffffff00);
+				spark2.makeGraphic(2, 2, 0xffff0000);
+				spark1.exists = spark2.exists = false;
+				sparks1.add(spark1);
+				sparks2.add(spark2);
+			}
+		sparks1.start(true,1.0);
+		sparks2.start(true, 1.0);
 	}
 }
