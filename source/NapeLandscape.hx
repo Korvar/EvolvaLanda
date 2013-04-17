@@ -33,6 +33,9 @@ class NapeLandscape extends FlxPhysSprite
 		
 		var arrayLength = 120; // FlxG.width;
 		
+		makeGraphic(Std.int(Registry.worldMaxX), Std.int(Registry.worldMaxY), 0x00000000, true);
+		offset = new FlxPoint(-Registry.worldMaxX / 2, -Registry.worldMaxY / 2);
+		
 		var landscapeArray:Array<Float> = new Array<Float>();
 		
 		var pointsArray:Array<Vec2> = new Array<Vec2>();
@@ -55,6 +58,11 @@ class NapeLandscape extends FlxPhysSprite
 			noiseValue = FlxU.abs(noiseValue);
 			landscapeArray[i] = FlxU.roundDecimal(noiseValue, 3); 
 			pointsArray[i] = new Vec2(i * lengthRatio, (noiseValue * heightRatio) + Registry.worldMaxY / 2);
+			
+			if (i > 0)
+			{
+				drawLine(pointsArray[i - 1].x, pointsArray[i - 1].y, pointsArray[i].x, pointsArray[i].y, 0xffffffff, 2);
+			}
 		}
 		
 		#if debug
@@ -85,8 +93,6 @@ class NapeLandscape extends FlxPhysSprite
 		
 		body.shapes.clear();
 
-		// polygonShape = new Polygon(pointsArray);
-		
 		polys = new GeomPoly(pointsArray);
 		
 		if (polys != null)

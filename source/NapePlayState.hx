@@ -43,6 +43,7 @@ class NapePlayState extends FlxPhysState
 	
 	override public function create():Void
 	{ 
+
 		#if debug
 
 		var debugString:FlxText = new FlxText(0, 0, FlxG.width, "test");
@@ -63,18 +64,18 @@ class NapePlayState extends FlxPhysState
 		// FlxPhysState shortcut to create bondaries around game area. 
 		createWalls(Registry.worldMinX, Registry.worldMinY, Registry.worldMaxX, Registry.worldMaxY);
 		// Creates 50 FlxPhysSprites randomly positioned.
-		for (i in 0...50) 
-		{
-			var startX = 30 + Std.random(FlxG.width - 60); // initial x between 30 and 370.
-			var startY = 30 + Std.random(FlxG.height - 60); // initial y between 30 and 370.
-		   var newSprite:FlxPhysSprite = new FlxPhysSprite(startX, startY );
-		   newSprite.makeGraphic(16, 16, 0xFFFFFFFF);
-			add (newSprite);
-			if (i == 0)
-			{
-				FlxG.watch(newSprite, "frameWidth");
-			}
-		}
+		//for (i in 0...50) 
+		//{
+			//var startX = 30 + Std.random(FlxG.width - 60); // initial x between 30 and 370.
+			//var startY = 30 + Std.random(FlxG.height - 60); // initial y between 30 and 370.
+		   //var newSprite:FlxPhysSprite = new FlxPhysSprite(startX, startY );
+		   //newSprite.makeGraphic(16, 16, 0xFFFFFFFF);
+			//add (newSprite);
+			//if (i == 0)
+			//{
+				//FlxG.watch(newSprite, "frameWidth");
+			//}
+		//}
 		
 		lander = new NapeLander(1000, 300);
 		add(lander);
@@ -92,8 +93,8 @@ class NapePlayState extends FlxPhysState
 
 		FlxG.camera.setBounds(Registry.worldMinX, Registry.worldMinY, Registry.worldMaxX, Registry.worldMaxY, true);	
 				
-		// var landscape:NapeLandscape = new NapeLandscape(0, 0);
-		// add(landscape);
+		var landscape:NapeLandscape = new NapeLandscape(0, 0);
+		add(landscape);
 		
 		focusPoint = new FlxPoint(lander.x, lander.y);
 		
@@ -166,7 +167,7 @@ class NapePlayState extends FlxPhysState
 		mouseJoint.active = false;
 		mouseJoint.stiff = false;
 		
-
+		disablePhysDebug();
 	}
 		   
 	override public function update():Void

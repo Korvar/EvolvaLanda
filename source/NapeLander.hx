@@ -28,7 +28,7 @@ import org.flixel.nape.FlxPhysState;
 class NapeLander extends FlxPhysSprite
 {
 	
-	var multiplier:Float = 10;
+	var multiplier:Float = 1;
 	
 	var thrust:Float = 0.0;
 	var thrustMax:Float = 1500;
