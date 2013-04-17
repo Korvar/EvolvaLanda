@@ -160,13 +160,6 @@ class NapeLander extends FlxPhysSprite
 		strut2 = createStrut(x + (24.375 * multiplier), y + (10 * multiplier), pointsArray, landerMaterial);
 		weldStrut(body, strut2.body, Vec2.weak( 20 * multiplier, 5 * multiplier), Vec2.weak( -4.375 * multiplier, -5 * multiplier));
 		
-		//pointsArray[3] = new Vec2( -6.25 * multiplier, -3.85 * multiplier);	
-		//pointsArray[2] = new Vec2( 2.5 * multiplier, 5 * multiplier);
-		//pointsArray[1] = new Vec2(5 * multiplier, 5 * multiplier);			
-		//pointsArray[0] = new Vec2( -5 * multiplier, -5 * multiplier);
-		//var strut2:FlxPhysSprite = createStrut(x + (25 * multiplier) , y + (10 * multiplier), pointsArray, landerMaterial);
-		//weldStrut(body, strut2.body, Vec2.weak( 20 * multiplier, 5 * multiplier), Vec2.weak(-5 * multiplier, -5 * multiplier));
-
 		#if debug
 		trace("======Strut3======");
 		#end		
