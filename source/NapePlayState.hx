@@ -1,5 +1,7 @@
 package ;
 
+import nape.constraint.PivotJoint;
+import nape.geom.Vec2;
 import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
@@ -30,6 +32,7 @@ class NapePlayState extends FlxPhysState
 	var defaultZoom:Float = 0.6;
 	var landingZoom:Float = 3.0;
 	
+	var mouseJoint:PivotJoint;
 	
 	var hud:FlxGroup;
 	
@@ -43,6 +46,7 @@ class NapePlayState extends FlxPhysState
 		#if debug
 
 		var debugString:FlxText = new FlxText(0, 0, FlxG.width, "test");
+		debugString.size = 15;
 		debugString.color = 0xFFFFFF;
 		Registry.debugString = debugString;
 		debugString.scrollFactor = (new FlxPoint(0, 0));
@@ -84,12 +88,12 @@ class NapePlayState extends FlxPhysState
 		zoomCamera.follow(lander);
 		zoomCamera.antialiasing = true;
 		FlxG.addCamera(zoomCamera);
-
+		debugString.cameras = [FlxG.camera, zoomCamera];
 
 		FlxG.camera.setBounds(Registry.worldMinX, Registry.worldMinY, Registry.worldMaxX, Registry.worldMaxY, true);	
 				
-		var landscape:NapeLandscape = new NapeLandscape(0, 0);
-		add(landscape);
+		// var landscape:NapeLandscape = new NapeLandscape(0, 0);
+		// add(landscape);
 		
 		focusPoint = new FlxPoint(lander.x, lander.y);
 		
@@ -157,7 +161,11 @@ class NapePlayState extends FlxPhysState
 		hudCamera.bgColor = 0x00ffffff;
 		FlxG.addCamera(hudCamera);
 		
-
+		mouseJoint = new PivotJoint(FlxPhysState.space.world, null, Vec2.weak(), Vec2.weak());
+		mouseJoint.space = FlxPhysState.space;
+		mouseJoint.active = false;
+		mouseJoint.stiff = false;
+		
 
 	}
 		   
@@ -199,5 +207,33 @@ class NapePlayState extends FlxPhysState
 		{
 			disablePhysDebug();
 		}
+		
+		if (mouseJoint.active) 
+		{
+			mouseJoint.anchor1.setxy(FlxG.mouse.x, FlxG.mouse.y);
+		}
+		
+		if (FlxG.mouse.justPressed())
+		{
+			var mousePoint:Vec2 = Vec2.get(FlxG.mouse.x, FlxG.mouse.y);
+			for (body in FlxPhysState.space.bodiesUnderPoint(mousePoint))
+			{
+				if (!body.isDynamic())
+				{
+					continue;
+				}
+				mouseJoint.body2 = body;
+				mouseJoint.anchor2.set(body.worldPointToLocal(mousePoint, true));
+				mouseJoint.active = true;
+				break;
+			}
+			mousePoint.dispose();
+		}
+		
+		if (FlxG.mouse.justReleased())
+		{
+			mouseJoint.active = false;
+		}
+			
 	}
 }

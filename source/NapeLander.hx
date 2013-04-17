@@ -1,5 +1,11 @@
 package ;
 
+import nape.callbacks.CbEvent;
+import nape.callbacks.CbType;
+import nape.callbacks.ConstraintCallback;
+import nape.callbacks.ConstraintListener;
+import nape.callbacks.Listener;
+import nape.constraint.Constraint;
 import nape.constraint.WeldJoint;
 import nape.geom.Vec2;
 import nape.phys.Body;
@@ -13,6 +19,7 @@ import org.flixel.FlxU;
 import org.flixel.nape.FlxPhysSprite;
 import org.flixel.FlxText;
 import org.flixel.FlxPoint;
+import org.flixel.nape.FlxPhysState;
 
 /**
  * ...
@@ -26,7 +33,7 @@ class NapeLander extends FlxPhysSprite
 	var thrust:Float = 0.0;
 	var thrustMax:Float = 1500;
 	
-	var maneuverJetThrust:Float = 30;
+	var maneuverJetThrust:Float = 50;
 	var thrustDelta:Float = 20;
 	
 	var upperJet:Vec2;
@@ -38,18 +45,23 @@ class NapeLander extends FlxPhysSprite
 	var mainEngineEmitter:FlxEmitter;
 
 	var mainEngineEmitterWidth = 6;
+	
+	var STRUTWELD:CbType;
 
 	public function new(X:Float=0, Y:Float=0, SimpleGraphic:Dynamic=null, CreateBody:Bool=true) 
 	{
 		super(X, Y, SimpleGraphic, CreateBody);
+
+		STRUTWELD = new CbType();		
+		var listener:Listener = new ConstraintListener(CbEvent.BREAK, STRUTWELD, breakListener);
+		listener.space = body.space;
 		
 		// loadGraphic("assets/data/Lander.png", false); 
 		
 		makeGraphic(40 * Std.int(multiplier), 50 * Std.int(multiplier), 0x00000000);
-		// offset = new FlxPoint(0, 10);
-		
-		createBody();
 
+		createBody();
+		
 		var particles:Int = 200;
 		
 		lowerJetEmitter = new FlxEmitter(x + (width / 2), y + (height / 2) + 15 * multiplier, particles);
@@ -145,6 +157,7 @@ class NapeLander extends FlxPhysSprite
 		pointsArray[1] = new Vec2(-5.625 * multiplier, 5 * multiplier);			
 		pointsArray[0] = new Vec2( 4.375 * multiplier, -5 * multiplier);
 		var strut1:FlxPhysSprite = new FlxPhysSprite();
+		// strut1 = createStrut(x - (24.375 * multiplier), y + (10 * multiplier), pointsArray, landerMaterial);
 		strut1 = createStrut(x - (24.375 * multiplier), y + (10 * multiplier), pointsArray, landerMaterial);
 		weldStrut(body, strut1.body, Vec2.weak( -20 * multiplier, 5 * multiplier), Vec2.weak(4.375 * multiplier, -5 * multiplier));
 		
@@ -194,6 +207,7 @@ class NapeLander extends FlxPhysSprite
 		var strut5:FlxPhysSprite = createStrut(x - (28.75 * multiplier), y + (17.5 * multiplier), pointsArray, landerMaterial);
 		weldStrut(strut1.body, strut5.body, Vec2.weak( -5.625 * multiplier, 5 * multiplier), Vec2.weak(-1.25 * multiplier, -2.5 * multiplier));		
 		weldStrut(strut1.body, strut5.body, Vec2.weak( -3.125 * multiplier, 5.0 * multiplier), Vec2.weak(1.25 * multiplier, -2.5 * multiplier));		
+		weldStrut(strut3.body, strut5.body, Vec2.weak(-8.75 * multiplier, 1.0 * multiplier), Vec2.weak(1.25 * multiplier, -2.5 * multiplier));		
 	
 		#if debug
 		trace("======Strut6======");
@@ -253,10 +267,9 @@ class NapeLander extends FlxPhysSprite
 		upperJetEmitter.y = y + (height / 2) + upperJetVec.y;
 		
 		#if debug
-		Registry.debugString.text = "UpperJetVec.X: " + upperJetVec.x + " UpperJetVec.Y: " + upperJetVec.y;
-		Registry.debugString.text += "\nUpperJet.X: " + FlxU.roundDecimal(upperJet.x, 3) + " UpperJet.Y: " + FlxU.roundDecimal(upperJet.y, 3);
-		Registry.debugString.text += "\nX: " + FlxU.roundDecimal(x, 3) + " Y: " + FlxU.roundDecimal(y, 3);
-		Registry.debugString.text += "\nMouseX: " + FlxG.mouse.x + " MouseY: " + FlxG.mouse.y;
+		Registry.debugString.text = "LanderX: " + FlxU.roundDecimal(x, 3) + " LanderY: " + FlxU.roundDecimal(y, 3);
+		Registry.debugString.text += "\nMouseX: " + FlxU.roundDecimal(FlxG.mouse.x,3) + " MouseY: " + FlxU.roundDecimal(FlxG.mouse.y,3);
+		Registry.debugString.text += "\nMouseX: " + FlxG.mouse.screenX + " MouseY: " + FlxG.mouse.screenY;
 		#end
 		
 		mainEngineEmitter.minRotation = angle - 5;
@@ -320,7 +333,9 @@ class NapeLander extends FlxPhysSprite
 		}
 		body.applyImpulse(body.localVectorToWorld(Vec2.weak(0, thrust)));
 
-
+		#if debug
+		Registry.debugString.text += "\n" + FlxG.score;
+		#end
 		
 		super.update();
 	}
@@ -395,6 +410,10 @@ class NapeLander extends FlxPhysSprite
 		strutWeld.frequency = 20.0;
 		strutWeld.damping = 1.0;
 		strutWeld.space = body.space;
+		strutWeld.maxError = 20;
+		strutWeld.breakUnderError = true;
+		strutWeld.cbTypes.add(STRUTWELD);
+		
 	}
 	
 	private function drawArray(sprite:FlxPhysSprite, pointsArray:Array<Vec2>):Void 
@@ -421,5 +440,18 @@ class NapeLander extends FlxPhysSprite
 				+ pointsArray[(i + 1) % pointsArray.length].x + "(" + toX + ")" + ", " + pointsArray[(i + 1) % pointsArray.length].y + "(" + toY + ")");
 			#end
 		}
+	}
+	
+	/**
+	 * Should report back when a constraint breaks.  Doesn't seem to.
+	 * @param	cb	The constraint callback.
+	 */
+	
+	public function breakListener(cb:ConstraintCallback):Void 
+	{
+		var brokenConstraint:Constraint = cb.constraint;
+		Registry.debugString.text += "\nBroken constraint! " + brokenConstraint.toString();
+		trace("Broken constraint! " + brokenConstraint.);
+		FlxG.score -= 100;
 	}
 }
