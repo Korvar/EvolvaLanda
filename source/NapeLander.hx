@@ -44,7 +44,7 @@ class NapeLander extends FlxPhysSprite
 	var upperJetEmitter:FlxEmitter;
 	var mainEngineEmitter:FlxEmitter;
 	
-	var weldStrength:Float = 20;
+	var weldStrength:Float = 5;
 
 	var mainEngineEmitterWidth = 6;
 	
@@ -74,7 +74,7 @@ class NapeLander extends FlxPhysSprite
 		{
 			for (i in 0...particles)
 			{
-				var particle:FlxParticle = new FlxParticle();
+				var particle:SparkParticle = new SparkParticle();
 				particle.makeGraphic(1, 1, 0xffffffff);
 				particle.exists = false;
 				emitter.add(particle);
@@ -471,10 +471,10 @@ class NapeLander extends FlxPhysSprite
 		FlxG.state.add(sparks2);
 		for (i in 0...20)
 			{
-				var spark1:FlxParticle = new FlxParticle();
-				var spark2:FlxParticle = new FlxParticle();
-				spark1.makeGraphic(2, 2, 0xffffff00);
-				spark2.makeGraphic(2, 2, 0xffff0000);
+				var spark1:SparkParticle = new SparkParticle();
+				var spark2:SparkParticle = new SparkParticle();
+				spark1.makeGraphic(2, 2, 0xffffffff);
+				spark2.makeGraphic(2, 2, 0xffffffff);
 				spark1.exists = spark2.exists = false;
 				sparks1.add(spark1);
 				sparks2.add(spark2);
