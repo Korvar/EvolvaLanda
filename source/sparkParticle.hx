@@ -25,7 +25,7 @@ class SparkParticle extends FlxParticle
 		
 		gradient = [ { timeVal: 0.0,  colour:0xffffffff },
 					{timeVal: 0.25, colour: 0xffffff00 },
-					{timeVal: 0.5 , colour: 0xff000000 },
+					{timeVal: 0.5 , colour: 0xffff0000 },
 					{timeVal: 0.9, colour: 0x00000000 } ];
 					
 		
@@ -41,7 +41,7 @@ class SparkParticle extends FlxParticle
 	override public function update()
 	{
 		var timeleft:Float = lifeTimer.timeLeft;
-		var timeRatio:Float = timeleft / lifeTimer.time;
+		var timeRatio:Float = lifeTimer.progress;
 		
 		for (i in 0...gradient.length -1)
 		{
@@ -59,6 +59,9 @@ class SparkParticle extends FlxParticle
 					col3[j] = col1[j] + (ratio * (col2[j] - col1[j]));
 				}
 				color = FlxU.makeColor(Std.int(col3[0]), Std.int(col3[1]), Std.int(col3[2]), col3[4]);
+				//trace("Timeleft: " + timeleft + " timeRatio: " + timeRatio);
+				//trace("i: " + i + " delta: " + delta + " ratio: " + ratio);
+				//trace("col1: " + col1.toString() + " col2: " + col2.toString() + " col3: " + col3.toString());
 			}
 		}
 		

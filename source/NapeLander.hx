@@ -75,12 +75,12 @@ class NapeLander extends FlxPhysSprite
 			for (i in 0...particles)
 			{
 				var particle:SparkParticle = new SparkParticle();
-				particle.makeGraphic(1, 1, 0xffffffff);
+				particle.makeGraphic(2, 2, 0xffffffff);
 				particle.exists = false;
 				emitter.add(particle);
 			}
 			FlxG.state.add(emitter);
-			emitter.start(false, 0.5,0.05);
+			emitter.start(false, 0.5, 0.05);
 			emitter.on = false;
 			// emitter.start(false, 1.0);
 		}
