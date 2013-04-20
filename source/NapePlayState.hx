@@ -43,7 +43,6 @@ class NapePlayState extends FlxPhysState
 	
 	override public function create():Void
 	{ 
-
 		#if debug
 
 		var debugString:FlxText = new FlxText(0, 0, FlxG.width, "test");
@@ -99,11 +98,11 @@ class NapePlayState extends FlxPhysState
 		focusPoint = new FlxPoint(lander.x, lander.y);
 		
 		hud = new FlxGroup();
-		buttonLeft = new FlxButton(10, 0, null);
-		buttonRight = new FlxButton(110, 0, null);
-		buttonUp = new FlxButton(60, - 50, null);
-		buttonDown = new FlxButton(60, 50, null);
-		buttonA = new FlxButton(FlxG.width - 60, 0, null);
+		buttonLeft = new FlxButton(10, 50, null);
+		buttonRight = new FlxButton(110, 50, null);
+		buttonUp = new FlxButton(60, 0, null);
+		buttonDown = new FlxButton(60, 100, null);
+		buttonA = new FlxButton(FlxG.width - 60, 50, null);
 		buttonLeft.loadGraphic("assets/data/button_left.png", true, false, 44, 45);
 		buttonRight.loadGraphic("assets/data/button_right.png", true, false, 44, 45);
 		buttonUp.loadGraphic("assets/data/button_up.png", true, false, 44, 45);
@@ -117,15 +116,20 @@ class NapePlayState extends FlxPhysState
 		hud.add(buttonA);
 
 		var maxX:Float=-2000;
-		var minX:Float = 0;
-		var minY:Float = 0;
+		var minX:Float = 2000;
+		var minY:Float = 2000;
 		var maxY:Float = -2000;
 		var numPoints:Int = 0;
+		
+		var hudCamera:FlxCamera = new FlxCamera(0, FlxU.floor((FlxG.height * 4 / 5) - 50), FlxU.floor(FlxG.width), FlxU.floor((FlxG.height / 5) + 100));
+		
 		for (i in hud.members)
 		{
 			var thisButton:FlxButton = cast(i, FlxButton);
-			thisButton.x -= 1000;
-			thisButton.y -= 1000;
+			//thisButton.x -= 500;
+			//thisButton.y -= 500;
+			
+			thisButton.cameras = [hudCamera];
 			
 			if (thisButton.x > maxX)
 			{
@@ -157,9 +161,12 @@ class NapePlayState extends FlxPhysState
 		Registry.buttonLeft = buttonLeft;
 		Registry.buttonRight = buttonRight;
 		
-		var hudCamera:FlxCamera = new FlxCamera(0, FlxU.floor((FlxG.height * 4 / 5) - 50), FlxU.floor(FlxG.width), FlxU.floor((FlxG.height / 5) + 50));
-		hudCamera.follow(buttonA);
-		hudCamera.bgColor = 0x00ffffff;
+		//hudCamera.follow(buttonA);
+		hudCamera.y = FlxG.height - (maxY - minY) - Std.int(buttonDown.height);
+		hudCamera.height = Std.int((maxY - minY) + buttonDown.height);
+		hudCamera.focusOn(new FlxPoint(meanX, meanY - 50));
+		hudCamera.setBounds(minX, minY - 100, maxX, maxY);
+		hudCamera.bgColor = 0x00000000;
 		FlxG.addCamera(hudCamera);
 		
 		mouseJoint = new PivotJoint(FlxPhysState.space.world, null, Vec2.weak(), Vec2.weak());

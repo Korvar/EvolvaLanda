@@ -64,6 +64,8 @@ class SparkParticle extends FlxParticle
 				//trace("col1: " + col1.toString() + " col2: " + col2.toString() + " col3: " + col3.toString());
 			}
 		}
+	
+		super.update();
 		
 	}
 	
