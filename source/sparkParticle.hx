@@ -4,7 +4,7 @@ import org.flixel.FlxParticle;
 import org.flixel.FlxTimer;
 import org.flixel.FlxU;
 
-typedef GradientEntry = { timeVal:Float, colour:UInt }
+typedef GradientEntry = { timeVal:Float, colour:Int }
 
 /**
  * ...

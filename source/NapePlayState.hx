@@ -88,7 +88,7 @@ class NapePlayState extends FlxPhysState
 		zoomCamera.follow(lander);
 		zoomCamera.antialiasing = true;
 		FlxG.addCamera(zoomCamera);
-		debugString.cameras = [FlxG.camera, zoomCamera];
+		#if debug debugString.cameras = [FlxG.camera, zoomCamera]; #end
 
 		FlxG.camera.setBounds(Registry.worldMinX, Registry.worldMinY, Registry.worldMaxX, Registry.worldMaxY, true);	
 				
@@ -126,8 +126,10 @@ class NapePlayState extends FlxPhysState
 		for (i in hud.members)
 		{
 			var thisButton:FlxButton = cast(i, FlxButton);
+			#if android
 			//thisButton.x -= 500;
-			//thisButton.y -= 500;
+			//thisButton.y -= 75;
+			#end
 			
 			thisButton.cameras = [hudCamera];
 			
@@ -163,6 +165,9 @@ class NapePlayState extends FlxPhysState
 		
 		//hudCamera.follow(buttonA);
 		hudCamera.y = FlxG.height - (maxY - minY) - Std.int(buttonDown.height);
+		#if android
+		hudCamera.y -= 75;
+		#end
 		hudCamera.height = Std.int((maxY - minY) + buttonDown.height);
 		hudCamera.focusOn(new FlxPoint(meanX, meanY - 50));
 		hudCamera.setBounds(minX, minY - 100, maxX, maxY);

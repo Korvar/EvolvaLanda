@@ -20,10 +20,10 @@ class ApplicationMain
 		wx.App.boot(function()
 		{
 			
-			frame = wx.Frame.create(null, null, "EvolvaLanda", null, { width: 640, height: 480 });
+			frame = wx.Frame.create(null, null, "EvolvaLanda", null, { width: 1280, height: 800 });
 			
 			#if nme
-			var stage = wx.NMEStage.create(frame, null, null, { width: 640, height: 480 });
+			var stage = wx.NMEStage.create(frame, null, null, { width: 1280, height: 800 });
 			#end
 			
 			Main.main();
@@ -38,7 +38,7 @@ class ApplicationMain
 		
 		nme.Lib.create(function()
 			{ 
-				//if ((640 == 0 && 480 == 0) || false)
+				//if ((1280 == 0 && 800 == 0) || true)
 				//{
 					nme.Lib.current.stage.align = nme.display.StageAlign.TOP_LEFT;
 					nme.Lib.current.stage.scaleMode = nme.display.StageScaleMode.NO_SCALE;
@@ -69,7 +69,7 @@ class ApplicationMain
 					#end
 				}
 			},
-			640, 480, 
+			1280, 800, 
 			30, 
 			16777215,
 			(true ? nme.Lib.HARDWARE : 0) |
@@ -80,7 +80,7 @@ class ApplicationMain
 			(true ? nme.Lib.RESIZABLE : 0) |
 			(false ? nme.Lib.BORDERLESS : 0) |
 			(false ? nme.Lib.VSYNC : 0) |
-			(false ? nme.Lib.FULLSCREEN : 0) |
+			(true ? nme.Lib.FULLSCREEN : 0) |
 			(0 == 4 ? nme.Lib.HW_AA_HIRES : 0) |
 			(0 == 2 ? nme.Lib.HW_AA : 0),
 			"EvolvaLanda"

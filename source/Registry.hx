@@ -27,6 +27,12 @@ class Registry
 	public static var buttonDown:FlxButton;
 	public static var buttonLeft:FlxButton;
 	public static var buttonRight:FlxButton;
+	
+	public static var thrust:Float = 0.0;
+	public static var thrustMax:Float = 1500;
+	
+	public static var maneuverJetThrust:Float = 50;
+	public static var thrustDelta:Float = 20;
 
 	public function new() 
 	{
