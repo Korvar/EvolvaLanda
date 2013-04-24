@@ -6,6 +6,7 @@ import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
+import org.flixel.FlxSprite;
 import org.flixel.FlxU;
 import org.flixel.nape.FlxPhysSprite;
 import org.flixel.nape.FlxPhysState;
@@ -58,23 +59,12 @@ class NapePlayState extends FlxPhysState
 		#if mobile
 		FlxG.mouse.hide();
 		#end
+		
 		// Sets gravity.
 		FlxPhysState.space.gravity.setxy(0, 100);  // Moon gravity!
+		
 		// FlxPhysState shortcut to create bondaries around game area. 
 		createWalls(Registry.worldMinX, Registry.worldMinY, Registry.worldMaxX, Registry.worldMaxY);
-		// Creates 50 FlxPhysSprites randomly positioned.
-		//for (i in 0...50) 
-		//{
-			//var startX = 30 + Std.random(FlxG.width - 60); // initial x between 30 and 370.
-			//var startY = 30 + Std.random(FlxG.height - 60); // initial y between 30 and 370.
-		   //var newSprite:FlxPhysSprite = new FlxPhysSprite(startX, startY );
-		   //newSprite.makeGraphic(16, 16, 0xFFFFFFFF);
-			//add (newSprite);
-			//if (i == 0)
-			//{
-				//FlxG.watch(newSprite, "frameWidth");
-			//}
-		//}
 		
 		lander = new NapeLander(1000, 300);
 		add(lander);
@@ -95,8 +85,23 @@ class NapePlayState extends FlxPhysState
 		var landscape:NapeLandscape = new NapeLandscape(0, 0);
 		add(landscape);
 		
+		// Creates 500 "stars" randomly positioned.
+		for (i in 0...500) 
+		{
+			var minX:Int = Std.int(Registry.worldMinX);
+			var worldWidth:Int = Std.int(Registry.worldMaxX - Registry.worldMinX);
+			var startX = minX + 30 + Std.random((worldWidth - 60)); 
+			var minY:Int = Std.int(Registry.worldMinY);
+			var worldHeight:Int = Std.int(Registry.worldMaxY - Registry.worldMinY);
+			var startY = minY + 30 + Std.random((worldHeight - 60)); 
+			var newSprite:FlxSprite = new FlxSprite(Std.int(startX), Std.int(startY) );
+			newSprite.makeGraphic(2, 2, 0xFFFFFFFF);
+			add (newSprite);
+		}		
+		
 		focusPoint = new FlxPoint(lander.x, lander.y);
 		
+
 		hud = new FlxGroup();
 		buttonLeft = new FlxButton(10, 50, null);
 		buttonRight = new FlxButton(110, 50, null);
@@ -109,6 +114,11 @@ class NapePlayState extends FlxPhysState
 		buttonDown.loadGraphic("assets/data/button_down.png", true, false, 44, 45);
 		buttonA.loadGraphic("assets/data/button_a.png", true, false, 44, 45);
 		buttonLeft.scrollFactor = buttonRight.scrollFactor = buttonUp.scrollFactor = buttonDown.scrollFactor = buttonA.scrollFactor = new FlxPoint(0, 0);
+		Registry.buttonUp = buttonUp;
+		Registry.buttonDown = buttonDown;
+		Registry.buttonLeft = buttonLeft;
+		Registry.buttonRight = buttonRight;
+		
 		hud.add(buttonLeft);
 		hud.add(buttonRight);
 		hud.add(buttonUp);
@@ -120,9 +130,9 @@ class NapePlayState extends FlxPhysState
 		var minY:Float = 2000;
 		var maxY:Float = -2000;
 		var numPoints:Int = 0;
-		
+
 		var hudCamera:FlxCamera = new FlxCamera(0, FlxU.floor((FlxG.height * 4 / 5) - 50), FlxU.floor(FlxG.width), FlxU.floor((FlxG.height / 5) + 100));
-		
+
 		for (i in hud.members)
 		{
 			var thisButton:FlxButton = cast(i, FlxButton);
@@ -156,12 +166,9 @@ class NapePlayState extends FlxPhysState
 		var meanX:Float = (minX + maxX) / numPoints;
 		var meanY:Float = (minY + maxY) / numPoints;
 		
-		add(hud);
+
 		
-		Registry.buttonUp = buttonUp;
-		Registry.buttonDown = buttonDown;
-		Registry.buttonLeft = buttonLeft;
-		Registry.buttonRight = buttonRight;
+
 		
 		//hudCamera.follow(buttonA);
 		hudCamera.y = FlxG.height - (maxY - minY) - Std.int(buttonDown.height);
@@ -172,7 +179,12 @@ class NapePlayState extends FlxPhysState
 		hudCamera.focusOn(new FlxPoint(meanX, meanY - 50));
 		hudCamera.setBounds(minX, minY - 100, maxX, maxY);
 		hudCamera.bgColor = 0x00000000;
+
+		#if mobile
 		FlxG.addCamera(hudCamera);
+		add(hud);
+		#end
+		
 		
 		mouseJoint = new PivotJoint(FlxPhysState.space.world, null, Vec2.weak(), Vec2.weak());
 		mouseJoint.space = FlxPhysState.space;

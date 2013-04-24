@@ -8,6 +8,7 @@ import nape.callbacks.Listener;
 import nape.constraint.Constraint;
 import nape.constraint.WeldJoint;
 import nape.geom.Vec2;
+import nape.geom.Vec3;
 import nape.phys.Body;
 import nape.phys.Material;
 import nape.shape.Polygon;
@@ -49,6 +50,13 @@ class NapeLander extends FlxPhysSprite
 	var mainEngineEmitterWidth = 6;
 	
 	var STRUTWELD:CbType;
+	
+	#if debug
+	
+	var maxImpulse:Vec3;
+	var minImpulse:Vec3;
+	
+	#end
 
 	public function new(X:Float=0, Y:Float=0, SimpleGraphic:Dynamic=null, CreateBody:Bool=true) 
 	{
@@ -90,6 +98,11 @@ class NapeLander extends FlxPhysSprite
 		thrustMax *= (multiplier * multiplier);
 		thrustDelta *= (multiplier * multiplier);
 		maneuverJetThrust *= (multiplier * multiplier);
+		
+		#if debug
+		maxImpulse = new Vec3();
+		minImpulse = new Vec3();
+		#end
 	}
 	
 	public function createBody():Void
@@ -269,9 +282,28 @@ class NapeLander extends FlxPhysSprite
 		upperJetEmitter.y = y + (height / 2) + upperJetVec.y;
 		
 		#if debug
-		Registry.debugString.text = "LanderX: " + FlxU.roundDecimal(x, 3) + " LanderY: " + FlxU.roundDecimal(y, 3);
-		Registry.debugString.text += "\nMouseX: " + FlxU.roundDecimal(FlxG.mouse.x,3) + " MouseY: " + FlxU.roundDecimal(FlxG.mouse.y,3);
-		Registry.debugString.text += "\nMouseX: " + FlxG.mouse.screenX + " MouseY: " + FlxG.mouse.screenY;
+		Registry.debugString.text = "";
+		//Registry.debugString.text += "LanderX: " + FlxU.roundDecimal(x, 3) + " LanderY: " + FlxU.roundDecimal(y, 3);
+		//Registry.debugString.text += "\nMouseX: " + FlxU.roundDecimal(FlxG.mouse.x,3) + " MouseY: " + FlxU.roundDecimal(FlxG.mouse.y,3);
+		//Registry.debugString.text += "\nMouseX: " + FlxG.mouse.screenX + " MouseY: " + FlxG.mouse.screenY;
+		
+		var totalImpulse:Vec3 = body.totalImpulse();
+		
+		Registry.debugString.text += "\nImpulse: " + FlxU.roundDecimal(totalImpulse.x, 3) + " " 
+			+ FlxU.roundDecimal(totalImpulse.y, 3) + " " + FlxU.roundDecimal(totalImpulse.z, 3);
+			
+		if (totalImpulse.x > maxImpulse.x) maxImpulse.x = totalImpulse.x;
+		if (totalImpulse.y > maxImpulse.y) maxImpulse.y = totalImpulse.y;
+		if (totalImpulse.z > maxImpulse.z) maxImpulse.z = totalImpulse.z;
+		if (totalImpulse.x < minImpulse.x) minImpulse.x = totalImpulse.x;
+		if (totalImpulse.y < minImpulse.y) minImpulse.y = totalImpulse.y;
+		if (totalImpulse.z < minImpulse.z) minImpulse.z = totalImpulse.z;
+
+		Registry.debugString.text += "\nMax Impulse: " + FlxU.roundDecimal(maxImpulse.x, 3) + " " 
+			+ FlxU.roundDecimal(maxImpulse.y, 3) + " " + FlxU.roundDecimal(maxImpulse.z, 3);	
+		Registry.debugString.text += "\nMin Impulse: " + FlxU.roundDecimal(minImpulse.x, 3) + " " 
+			+ FlxU.roundDecimal(minImpulse.y, 3) + " " + FlxU.roundDecimal(minImpulse.z, 3);		
+		
 		#end
 		
 		mainEngineEmitter.minRotation = angle - 5;
@@ -306,8 +338,8 @@ class NapeLander extends FlxPhysSprite
 		#end
 		
 		var thrustVec:Vec2 = new Vec2(0, thrust);
-		var minThrustVec:Vec2 = new Vec2( -20, -thrust / 5); // These vectors are for the exhaust particles, so direction is reversed.
-		var maxThrustVec:Vec2 = new Vec2(20, -thrust / 5);
+		var minThrustVec:Vec2 = new Vec2( -20, -thrust); // These vectors are for the exhaust particles, so direction is reversed.
+		var maxThrustVec:Vec2 = new Vec2(20, -thrust);
 		var minThrustWorldVec:Vec2 = body.localVectorToWorld(minThrustVec);
 		var maxThrustWorldVec:Vec2 = body.localVectorToWorld(maxThrustVec);
 		var minX:Float = FlxU.min(minThrustWorldVec.x, maxThrustWorldVec.x);
