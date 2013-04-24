@@ -97,12 +97,21 @@ class NapePlayState extends FlxPhysState
 		// Creates 500 "stars" randomly positioned.
 		for (i in 0...500) 
 		{
-			var minX:Int = Std.int(Registry.worldMinX);
-			var worldWidth:Int = Std.int(Registry.worldMaxX - Registry.worldMinX);
-			var startX = minX + 30 + Std.random((worldWidth - 60)); 
-			var minY:Int = Std.int(Registry.worldMinY);
-			var worldHeight:Int = Std.int(Registry.worldMaxY - Registry.worldMinY);
-			var startY = minY + 30 + Std.random((worldHeight - 60)); 
+			var startX:Float = 0;
+			var startY:Float = 0;
+			var emptySpace:Bool = false;
+			while (emptySpace == false)
+			{
+				var minX:Int = Std.int(Registry.worldMinX);
+				var worldWidth:Int = Std.int(Registry.worldMaxX - Registry.worldMinX);
+				startX = minX + 30 + Std.random((worldWidth - 60)); 
+				var minY:Int = Std.int(Registry.worldMinY);
+				var worldHeight:Int = Std.int(Registry.worldMaxY - Registry.worldMinY);
+				startY = minY + 30 + Std.random((worldHeight - 60)); 
+				
+				emptySpace = !(landscape.body.contains(Vec2.weak(startX, startY)));
+			}
+			
 			var newSprite:FlxSprite = new FlxSprite(Std.int(startX), Std.int(startY) );
 			newSprite.makeGraphic(2, 2, 0xFFFFFFFF);
 			add (newSprite);
