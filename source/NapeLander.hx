@@ -4,6 +4,9 @@ import nape.callbacks.CbEvent;
 import nape.callbacks.CbType;
 import nape.callbacks.ConstraintCallback;
 import nape.callbacks.ConstraintListener;
+import nape.callbacks.InteractionCallback;
+import nape.callbacks.InteractionListener;
+import nape.callbacks.InteractionType;
 import nape.callbacks.Listener;
 import nape.constraint.Constraint;
 import nape.constraint.WeldJoint;
@@ -11,7 +14,9 @@ import nape.geom.Vec2;
 import nape.geom.Vec3;
 import nape.phys.Body;
 import nape.phys.Material;
+import nape.shape.Circle;
 import nape.shape.Polygon;
+import nape.shape.Shape;
 import org.flixel.FlxButton;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
@@ -50,6 +55,10 @@ class NapeLander extends FlxPhysSprite
 	var mainEngineEmitterWidth = 6;
 	
 	var STRUTWELD:CbType;
+
+	
+	var proximityDetector:Body;
+	
 	
 	#if debug
 	
@@ -62,9 +71,22 @@ class NapeLander extends FlxPhysSprite
 	{
 		super(X, Y, SimpleGraphic, CreateBody);
 
-		STRUTWELD = new CbType();		
+		STRUTWELD = new CbType();	
+
 		var listener:Listener = new ConstraintListener(CbEvent.BREAK, STRUTWELD, breakListener);
 		listener.space = body.space;
+		
+		var proximityListener = new InteractionListener(CbEvent.BEGIN, InteractionType.SENSOR,
+			Registry.PROXIMITYDETECTOR,
+			Registry.LANDSCAPE,
+			proximityEnterCallback);
+		proximityListener.space = body.space;
+		
+		var proximityListener2 = new InteractionListener(CbEvent.END, InteractionType.SENSOR,
+			Registry.PROXIMITYDETECTOR,
+			Registry.LANDSCAPE,
+			proximityExitCallback);
+		proximityListener2.space = body.space;		
 		
 		// loadGraphic("assets/data/Lander.png", false); 
 		
@@ -103,6 +125,12 @@ class NapeLander extends FlxPhysSprite
 		maxImpulse = new Vec3();
 		minImpulse = new Vec3();
 		#end
+		
+		var proximityDetectorShape:Shape = new Circle(150 * multiplier);
+		body.shapes.add(proximityDetectorShape);
+		proximityDetectorShape.sensorEnabled = true;
+		proximityDetectorShape.cbTypes.add(Registry.PROXIMITYDETECTOR);
+		
 	}
 	
 	public function createBody():Void
@@ -514,4 +542,16 @@ class NapeLander extends FlxPhysSprite
 		sparks1.start(true,1.0);
 		sparks2.start(true, 1.0);
 	}
+	
+	function proximityEnterCallback(cb:InteractionCallback)
+	{
+		Registry.zoomCamera.targetZoom = 3.0;
+	}
+	
+	function proximityExitCallback(cb:InteractionCallback)
+	{
+		Registry.zoomCamera.targetZoom = 0.6;
+	}
+	
+	
 }

@@ -1,6 +1,8 @@
 package ;
+import nape.callbacks.CbType;
 import nme.display.Sprite;
 import org.flixel.FlxButton;
+import org.flixel.FlxCamera;
 import org.flixel.FlxText;
 
 /**
@@ -33,6 +35,13 @@ class Registry
 	
 	public static var maneuverJetThrust:Float = 50;
 	public static var thrustDelta:Float = 20;
+	
+	public static var landscape:NapeLandscape;
+	
+	public static var LANDSCAPE:CbType;
+	public static var PROXIMITYDETECTOR:CbType;
+	
+	public static var zoomCamera:ZoomCamera;
 
 	public function new() 
 	{

@@ -1,5 +1,6 @@
 package ;
 
+import nape.callbacks.CbType;
 import nape.constraint.PivotJoint;
 import nape.geom.Vec2;
 import org.flixel.FlxButton;
@@ -60,6 +61,11 @@ class NapePlayState extends FlxPhysState
 		FlxG.mouse.hide();
 		#end
 		
+		Registry.LANDSCAPE = new CbType();
+		Registry.PROXIMITYDETECTOR = new CbType();
+		
+		
+		
 		// Sets gravity.
 		FlxPhysState.space.gravity.setxy(0, 100);  // Moon gravity!
 		
@@ -78,12 +84,15 @@ class NapePlayState extends FlxPhysState
 		zoomCamera.follow(lander);
 		zoomCamera.antialiasing = true;
 		FlxG.addCamera(zoomCamera);
+		Registry.zoomCamera = zoomCamera;
 		#if debug debugString.cameras = [FlxG.camera, zoomCamera]; #end
 
 		FlxG.camera.setBounds(Registry.worldMinX, Registry.worldMinY, Registry.worldMaxX, Registry.worldMaxY, true);	
 				
 		var landscape:NapeLandscape = new NapeLandscape(0, 0);
 		add(landscape);
+		Registry.landscape = landscape;
+		landscape.body.cbTypes.add(Registry.LANDSCAPE);
 		
 		// Creates 500 "stars" randomly positioned.
 		for (i in 0...500) 
