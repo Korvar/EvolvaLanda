@@ -42,7 +42,9 @@ class Registry
 	public static var PROXIMITYDETECTOR:CbType;
 	
 	public static var zoomCamera:ZoomCamera;
-
+	public static var weldStrength:Float = 5;
+	
+	
 	public function new() 
 	{
 		

@@ -50,7 +50,7 @@ class NapeLander extends FlxPhysSprite
 	var upperJetEmitter:FlxEmitter;
 	var mainEngineEmitter:FlxEmitter;
 	
-	var weldStrength:Float = 5;
+
 
 	var mainEngineEmitterWidth = 6;
 	
@@ -192,7 +192,7 @@ class NapeLander extends FlxPhysSprite
 
 		// Struts
 		#if debug
-		trace("======Strut1======");
+		//trace("======Strut1======");
 		#end
 		pointsArray = new Array<Vec2>();
 		pointsArray[3] = new Vec2( 5.625 * multiplier, -3.75 * multiplier);	
@@ -205,7 +205,7 @@ class NapeLander extends FlxPhysSprite
 		weldStrut(body, strut1.body, Vec2.weak( -20 * multiplier, 5 * multiplier), Vec2.weak(4.375 * multiplier, -5 * multiplier));
 		
 		#if debug
-		trace("======Strut2======");
+		//trace("======Strut2======");
 		#end	
 		pointsArray = new Array<Vec2>();		
 		pointsArray[0] = new Vec2( -5.625 * multiplier, -3.75 * multiplier);	
@@ -217,7 +217,7 @@ class NapeLander extends FlxPhysSprite
 		weldStrut(body, strut2.body, Vec2.weak( 20 * multiplier, 5 * multiplier), Vec2.weak( -4.375 * multiplier, -5 * multiplier));
 		
 		#if debug
-		trace("======Strut3======");
+		//trace("======Strut3======");
 		#end		
 		pointsArray[0] = new Vec2(6.75 * multiplier, -1.0 * multiplier);
 		pointsArray[1] = new Vec2(-6.75 * multiplier,  -1.0 * multiplier);	
@@ -229,7 +229,7 @@ class NapeLander extends FlxPhysSprite
 		weldStrut(strut1.body, strut3.body, Vec2.weak( -3.125 * multiplier, 5 * multiplier), pointsArray[2]);
 		
 		#if debug
-		trace("======Strut4======");
+		//trace("======Strut4======");
 		#end		
 		pointsArray[0] = new Vec2(6.75 * multiplier, -1.0 * multiplier);
 		pointsArray[1] = new Vec2(-6.75 * multiplier,  -1.0 * multiplier);	
@@ -241,7 +241,7 @@ class NapeLander extends FlxPhysSprite
 		weldStrut(strut2.body, strut4.body, Vec2.weak( 3.125 * multiplier, 5 * multiplier), pointsArray[3]);	
 		
 		#if debug
-		trace("======Strut5======");
+		//trace("======Strut5======");
 		#end		
 		pointsArray[0] = new Vec2(1.25 * multiplier, -2.5 * multiplier);
 		pointsArray[1] = new Vec2(-1.25 * multiplier,  -2.5 * multiplier);	
@@ -253,7 +253,7 @@ class NapeLander extends FlxPhysSprite
 		weldStrut(strut3.body, strut5.body, Vec2.weak(-8.75 * multiplier, 1.0 * multiplier), Vec2.weak(1.25 * multiplier, -2.5 * multiplier));		
 	
 		#if debug
-		trace("======Strut6======");
+		//trace("======Strut6======");
 		#end		
 		pointsArray[3] = new Vec2(-1.25 * multiplier, -2.5 * multiplier);
 		pointsArray[2] = new Vec2(1.25 * multiplier,  -2.5 * multiplier);	
@@ -265,7 +265,7 @@ class NapeLander extends FlxPhysSprite
 
 		//Feet!
 		#if debug
-		trace("======Foot1======");
+		//trace("======Foot1======");
 		#end
 		pointsArray[0] = new Vec2(1.25 * multiplier, -2.5 * multiplier);
 		pointsArray[1] = new Vec2(-1.25 * multiplier,  -2.5 * multiplier);	
@@ -276,7 +276,7 @@ class NapeLander extends FlxPhysSprite
 
 		
 		#if debug
-		trace("======Foot2======");
+		//trace("======Foot2======");
 		#end		
 		pointsArray[0] = new Vec2(1.25 * multiplier, -2.5 * multiplier);
 		pointsArray[1] = new Vec2(-1.25 * multiplier,  -2.5 * multiplier);	
@@ -311,9 +311,9 @@ class NapeLander extends FlxPhysSprite
 		
 		#if debug
 		Registry.debugString.text = "";
-		//Registry.debugString.text += "LanderX: " + FlxU.roundDecimal(x, 3) + " LanderY: " + FlxU.roundDecimal(y, 3);
-		//Registry.debugString.text += "\nMouseX: " + FlxU.roundDecimal(FlxG.mouse.x,3) + " MouseY: " + FlxU.roundDecimal(FlxG.mouse.y,3);
-		//Registry.debugString.text += "\nMouseX: " + FlxG.mouse.screenX + " MouseY: " + FlxG.mouse.screenY;
+		Registry.debugString.text += "LanderX: " + FlxU.roundDecimal(x, 3) + " LanderY: " + FlxU.roundDecimal(y, 3);
+		Registry.debugString.text += "\nMouseX: " + FlxU.roundDecimal(FlxG.mouse.x,3) + " MouseY: " + FlxU.roundDecimal(FlxG.mouse.y,3);
+		Registry.debugString.text += "\nMouseX: " + FlxG.mouse.screenX + " MouseY: " + FlxG.mouse.screenY;
 		
 		var totalImpulse:Vec3 = body.totalImpulse();
 		
@@ -340,27 +340,27 @@ class NapeLander extends FlxPhysSprite
 		
 		if (FlxG.keys.pressed("UP") || FlxG.keys.pressed("W") || Registry.buttonUp.status == FlxButton.PRESSED)
 		{
-			thrust -= thrustDelta;
+			thrust -= Registry.thrustDelta;
 		}
 		
 		if (FlxG.keys.pressed("DOWN") || FlxG.keys.pressed("S") || Registry.buttonDown.status == FlxButton.PRESSED)
 		{
-			thrust += thrustDelta;
+			thrust += Registry.thrustDelta;
 		}
 		
 		if (FlxG.keys.pressed("LEFT") || FlxG.keys.pressed("A") || Registry.buttonLeft.status == FlxButton.PRESSED)
 		{
-			body.applyImpulse(body.localVectorToWorld(Vec2.weak(-maneuverJetThrust, 0)), upperJetVec);
-			body.applyImpulse(body.localVectorToWorld(Vec2.weak(maneuverJetThrust, 0)), lowerJetVec);
+			body.applyImpulse(body.localVectorToWorld(Vec2.weak(-Registry.maneuverJetThrust, 0)), upperJetVec);
+			body.applyImpulse(body.localVectorToWorld(Vec2.weak(Registry.maneuverJetThrust, 0)), lowerJetVec);
 		}
 		
 		if (FlxG.keys.pressed("RIGHT") || FlxG.keys.pressed("D") || Registry.buttonRight.status == FlxButton.PRESSED)
 		{
-			body.applyImpulse(body.localVectorToWorld(Vec2.weak(maneuverJetThrust, 0)), upperJetVec);
-			body.applyImpulse(body.localVectorToWorld(Vec2.weak(-maneuverJetThrust, 0)), lowerJetVec);
+			body.applyImpulse(body.localVectorToWorld(Vec2.weak(Registry.maneuverJetThrust, 0)), upperJetVec);
+			body.applyImpulse(body.localVectorToWorld(Vec2.weak(-Registry.maneuverJetThrust, 0)), lowerJetVec);
 		}		
 		
-		thrust = FlxU.bound(thrust, -thrustMax, 0);
+		thrust = FlxU.bound(thrust, -Registry.thrustMax, 0);
 		#if debug
 		Registry.debugString.text += "\nThrust: " + thrust;
 		#end
@@ -411,7 +411,7 @@ class NapeLander extends FlxPhysSprite
 		strut.body.shapes.add(new Polygon(pointsArray, material));
 		
 		#if debug
-		trace(pointsArray.length);
+		// trace(pointsArray.length);
 		#end
 		
 		var maxX:Float=-2000;
@@ -438,7 +438,7 @@ class NapeLander extends FlxPhysSprite
 			}
 		}	
 		#if debug
-		trace("MinX: " + minX + " MaxX: " + maxX + " MinY: " + minY +  " MaxY: " + maxY);	
+		// trace("MinX: " + minX + " MaxX: " + maxX + " MinY: " + minY +  " MaxY: " + maxY);	
 		#end
 		
 		var strutWidth:Int;
@@ -450,7 +450,7 @@ class NapeLander extends FlxPhysSprite
 		
 		drawArray(strut, pointsArray);
 		#if debug
-		trace("----");
+		// trace("----");
 		#end
 
 		#if debug
@@ -460,6 +460,7 @@ class NapeLander extends FlxPhysSprite
 		//strut.drawLine(strutWidth - 1, 0, 0, 0, 0xffff0000);
 		#end
 		FlxG.state.add(strut);
+		strut.cameras = [Registry.zoomCamera];
 		
 		return (strut);
 	}
@@ -472,7 +473,7 @@ class NapeLander extends FlxPhysSprite
 		strutWeld.frequency = 20.0;
 		strutWeld.damping = 1.0;
 		strutWeld.space = body.space;
-		strutWeld.maxError = weldStrength;
+		strutWeld.maxError = Registry.weldStrength;
 		strutWeld.breakUnderError = true;
 		strutWeld.cbTypes.add(STRUTWELD);
 		
@@ -481,8 +482,8 @@ class NapeLander extends FlxPhysSprite
 	private function drawArray(sprite:FlxPhysSprite, pointsArray:Array<Vec2>):Void 
 	{
 		#if debug
-		trace("X: " + sprite.x + " Y: " + sprite.y);
-		trace("Width: " + sprite.width + " Height: " + sprite.height);
+		//trace("X: " + sprite.x + " Y: " + sprite.y);
+		//trace("Width: " + sprite.width + " Height: " + sprite.height);
 		#end
 		for (i in 0...pointsArray.length)
 		{
@@ -498,8 +499,8 @@ class NapeLander extends FlxPhysSprite
 			
 			sprite.drawLine(fromX, fromY, toX, toY, 0xffffffff, 1);
 			#if debug
-			trace(i + " " + pointsArray[i].x + "(" + fromX + ")" + ", " + pointsArray[i].y + "(" + fromY + ")" + " -> " 
-				+ pointsArray[(i + 1) % pointsArray.length].x + "(" + toX + ")" + ", " + pointsArray[(i + 1) % pointsArray.length].y + "(" + toY + ")");
+			//trace(i + " " + pointsArray[i].x + "(" + fromX + ")" + ", " + pointsArray[i].y + "(" + fromY + ")" + " -> " 
+			//	+ pointsArray[(i + 1) % pointsArray.length].x + "(" + toX + ")" + ", " + pointsArray[(i + 1) % pointsArray.length].y + "(" + toY + ")");
 			#end
 		}
 	}
@@ -536,6 +537,7 @@ class NapeLander extends FlxPhysSprite
 				spark1.makeGraphic(2, 2, 0xffffffff);
 				spark2.makeGraphic(2, 2, 0xffffffff);
 				spark1.exists = spark2.exists = false;
+				spark1.cameras = spark2.cameras = [Registry.zoomCamera];
 				sparks1.add(spark1);
 				sparks2.add(spark2);
 			}

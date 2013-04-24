@@ -41,6 +41,27 @@ class NapeLandscape extends FlxPhysSprite
 		var pointsArray:Array<Vec2> = new Array<Vec2>();
 		
 		octave1 = new SmoothNoise(6, arrayLength);
+		
+		var minValue:Float = 2;
+		var maxValue:Float = -2;
+		for (value in octave1.values)
+		{
+			if (value > maxValue) maxValue = value;
+			if (value < minValue) minValue = value;
+		}
+		
+		for (i in 0...octave1.values.length)
+		{
+			octave1.values[i] = ((octave1.values[i] - minValue) / (maxValue - minValue));
+		}
+		
+		
+		
+		#if debug
+		trace("minValue: " + minValue + " maxValue: " + maxValue);
+		trace(octave1.values.toString());
+		#end
+		
 		octave2 = new SmoothNoise(12, arrayLength);
 		octave3 = new SmoothNoise(24, arrayLength);
 		octave4 = new SmoothNoise(48, arrayLength);
@@ -53,7 +74,7 @@ class NapeLandscape extends FlxPhysSprite
 		
 		for (i in 0...arrayLength)
 		{
-			var noiseValue = (octave1.noise(i) / 2) + (octave2.noise(i) / 4) + (octave3.noise(i) / 8) + (octave4.noise(i) / 16);
+			var noiseValue = (octave1.noise(i) / 2) + (octave2.noise(i) / 8) + (octave3.noise(i) / 16) + (octave4.noise(i) / 32);
 			noiseValue = (noiseValue * 2) - 1;
 			noiseValue = FlxU.abs(noiseValue);
 			landscapeArray[i] = FlxU.roundDecimal(noiseValue, 3); 
