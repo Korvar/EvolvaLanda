@@ -197,6 +197,46 @@ class ApplicationMain {
             return Assets.getBitmapData ("assets/data/fontData11pt.png");
          
 		
+		if (inName=="assets/data/fonts/bioliquid-regular.ttf")
+			 
+			 return Assets.getFont ("assets/data/fonts/bioliquid-regular.ttf");
+		 
+		
+		if (inName=="assets/data/fonts/bioliquid.zip")
+			 
+            return Assets.getBytes ("assets/data/fonts/bioliquid.zip");
+         
+		
+		if (inName=="assets/data/fonts/nasalization-rg.ttf")
+			 
+			 return Assets.getFont ("assets/data/fonts/nasalization-rg.ttf");
+		 
+		
+		if (inName=="assets/data/fonts/nasalization.jpg")
+			 
+            return Assets.getBitmapData ("assets/data/fonts/nasalization.jpg");
+         
+		
+		if (inName=="assets/data/fonts/nasalization.zip")
+			 
+            return Assets.getBytes ("assets/data/fonts/nasalization.zip");
+         
+		
+		if (inName=="assets/data/fonts/read this . . . really read it.pdf")
+			 
+			 return Assets.getText ("assets/data/fonts/read this . . . really read it.pdf");
+         
+		
+		if (inName=="assets/data/fonts/read this first.html")
+			 
+			 return Assets.getText ("assets/data/fonts/read this first.html");
+         
+		
+		if (inName=="assets/data/fonts/westminster.ttf")
+			 
+			 return Assets.getFont ("assets/data/fonts/westminster.ttf");
+		 
+		
 		if (inName=="assets/data/handle.png")
 			 
             return Assets.getBitmapData ("assets/data/handle.png");
@@ -331,6 +371,14 @@ class NME_assets_data_cursor_png extends nme.display.BitmapData { public functio
 class NME_assets_data_default_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
 class NME_assets_data_fontdata10pt_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
 class NME_assets_data_fontdata11pt_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+class NME_assets_data_fonts_bioliquid_regular_ttf extends nme.text.Font { }
+class NME_assets_data_fonts_bioliquid_zip extends nme.utils.ByteArray { }
+class NME_assets_data_fonts_nasalization_rg_ttf extends nme.text.Font { }
+class NME_assets_data_fonts_nasalization_jpg extends nme.display.BitmapData { public function new () { super (0, 0); } }
+class NME_assets_data_fonts_nasalization_zip extends nme.utils.ByteArray { }
+class NME_assets_data_fonts_read_this_______really_read_it_pdf extends nme.utils.ByteArray { }
+class NME_assets_data_fonts_read_this_first_html extends nme.utils.ByteArray { }
+class NME_assets_data_fonts_westminster_ttf extends nme.text.Font { }
 class NME_assets_data_handle_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
 class NME_assets_data_lander_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
 class NME_assets_data_landertemplate_png extends nme.display.BitmapData { public function new () { super (0, 0); } }

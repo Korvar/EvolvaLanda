@@ -301,8 +301,29 @@ class NapePlayState extends FlxPhysState
 		thrustDeltaButtonDown.onDown = thrustDeltaButtonDownHandler;
 		thrustDeltaButtonUp.onDown = thrustDeltaButtonUpHandler;
 		
+		var maneuverJetThrustButtonUp:FlxButton = new FlxButton(FlxG.width - 300, 200, null);
+		var maneuverJetThrustButtonDown:FlxButton = new FlxButton(FlxG.width - 64, 200, null);
+		maneuverJetThrustText = new FlxText(FlxG.width - 236, 200, 174, "maneuverJetThrust: " + Std.string(Registry.maneuverJetThrust));
+		maneuverJetThrustText.alignment = "center";
+		maneuverJetThrustButtonUp.loadGraphic("assets/data/button_up.png", true, false, 44, 45);
+		maneuverJetThrustButtonDown.loadGraphic("assets/data/button_down.png", true, false, 44, 45);
+		maneuverJetThrustButtonDown.onDown = maneuverJetThrustButtonDownHandler;
+		maneuverJetThrustButtonUp.onDown = maneuverJetThrustButtonUpHandler;		
+		
+		
+		var weldStrengthButtonUp:FlxButton = new FlxButton(FlxG.width - 300, 250, null);
+		var weldStrengthButtonDown:FlxButton = new FlxButton(FlxG.width - 64, 250, null);
+		weldStrengthText = new FlxText(FlxG.width - 236, 250, 174, "weldStrength: " + Std.string(Registry.weldStrength));
+		weldStrengthText.alignment = "center";
+		weldStrengthButtonUp.loadGraphic("assets/data/button_up.png", true, false, 44, 45);
+		weldStrengthButtonDown.loadGraphic("assets/data/button_down.png", true, false, 44, 45);
+		weldStrengthButtonDown.onDown = weldStrengthButtonDownHandler;
+		weldStrengthButtonUp.onDown = weldStrengthButtonUpHandler;		
+		
 		for (item in [thrustMaxButtonDown, thrustMaxButtonUp, thrustMaxText, 
-						thrustDeltaButtonUp, thrustDeltaButtonDown, thrustDeltaText])
+						thrustDeltaButtonUp, thrustDeltaButtonDown, thrustDeltaText,
+						weldStrengthButtonUp, weldStrengthButtonDown, weldStrengthText,
+						maneuverJetThrustButtonUp,maneuverJetThrustButtonDown, maneuverJetThrustText])
 		{
 			debugHud.add(item);
 		}
@@ -314,13 +335,6 @@ class NapePlayState extends FlxPhysState
 		debugHUDCamera.bgColor = 0xFF000000;
 		FlxG.addCamera(debugHUDCamera);
 		debugHud.cameras = [debugHUDCamera];
-		
-		for (i in -40...40)
-		{
-			var sillyString = new FlxText(FlxG.width - 236, i * 10 , 174, Std.string(i * 10));
-			debugHud.add(sillyString);
-		}
-		
 		
 		for (item in debugHud.members)
 		{
@@ -344,13 +358,35 @@ class NapePlayState extends FlxPhysState
 	
 	function thrustDeltaButtonDownHandler():Void
 	{
-		Registry.thrustDelta -= 1;
+		Registry.thrustDelta -= 10;
 		thrustDeltaText.text = "thrustDelta: " + Std.string(Registry.thrustDelta);
 	}	
 	function thrustDeltaButtonUpHandler():Void
 	{
-		Registry.thrustDelta += 1;
+		Registry.thrustDelta += 10;
 		thrustDeltaText.text = "thrustDelta: " + Std.string(Registry.thrustDelta);
+	}	
+	
+	function maneuverJetThrustButtonDownHandler():Void
+	{
+		Registry.maneuverJetThrust -= 100;
+		maneuverJetThrustText.text = "maneuverJetThrust: " + Std.string(Registry.maneuverJetThrust);
+	}	
+	function maneuverJetThrustButtonUpHandler():Void
+	{
+		Registry.maneuverJetThrust += 100;
+		maneuverJetThrustText.text = "maneuverJetThrust: " + Std.string(Registry.maneuverJetThrust);
+	}
+		
+	function weldStrengthButtonDownHandler():Void
+	{
+		Registry.weldStrength -= 1;
+		weldStrengthText.text = "weldStrength: " + Std.string(Registry.weldStrength);
+	}	
+	function weldStrengthButtonUpHandler():Void
+	{
+		Registry.weldStrength += 1;
+		weldStrengthText.text = "weldStrength: " + Std.string(Registry.weldStrength);
 	}
 	
 	private function createStars():Void 

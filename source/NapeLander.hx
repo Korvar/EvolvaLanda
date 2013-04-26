@@ -107,10 +107,11 @@ class NapeLander extends FlxPhysSprite
 				var particle:SparkParticle = new SparkParticle();
 				particle.makeGraphic(2, 2, 0xffffffff);
 				particle.exists = false;
+				particle.cameras = [Registry.zoomCamera];
 				emitter.add(particle);
 			}
 			FlxG.state.add(emitter);
-			emitter.start(false, 0.5, 0.05);
+			emitter.start(false, 0.5, 0.005);
 			emitter.on = false;
 			// emitter.start(false, 1.0);
 		}
@@ -365,9 +366,11 @@ class NapeLander extends FlxPhysSprite
 		Registry.debugString.text += "\nThrust: " + thrust;
 		#end
 		
-		var thrustVec:Vec2 = new Vec2(0, thrust);
-		var minThrustVec:Vec2 = new Vec2( -20, -thrust); // These vectors are for the exhaust particles, so direction is reversed.
-		var maxThrustVec:Vec2 = new Vec2(20, -thrust);
+		var thrustVecMagnitude = (thrust / thrustMax) * 100 * multiplier;
+		
+		var thrustVec:Vec2 = new Vec2(0, thrustVecMagnitude);
+		var minThrustVec:Vec2 = new Vec2( -20, -thrustVecMagnitude); // These vectors are for the exhaust particles, so direction is reversed.
+		var maxThrustVec:Vec2 = new Vec2(20, -thrustVecMagnitude);
 		var minThrustWorldVec:Vec2 = body.localVectorToWorld(minThrustVec);
 		var maxThrustWorldVec:Vec2 = body.localVectorToWorld(maxThrustVec);
 		var minX:Float = FlxU.min(minThrustWorldVec.x, maxThrustWorldVec.x);
