@@ -21,9 +21,9 @@ class Registry
 	#end
 	
 	public static var worldMinX:Float = 0;
-	public static var worldMaxX:Float = 2000;
+	public static var worldMaxX:Float = 2560;
 	public static var worldMinY:Float = 0;
-	public static var worldMaxY:Float = 2000;
+	public static var worldMaxY:Float = 1600;
 	
 	public static var buttonUp:FlxButton;
 	public static var buttonDown:FlxButton;
@@ -39,10 +39,20 @@ class Registry
 	public static var landscape:NapeLandscape;
 	
 	public static var LANDSCAPE:CbType;
+	public static var PLATFORM:CbType;
 	public static var PROXIMITYDETECTOR:CbType;
 	
 	public static var zoomCamera:ZoomCamera;
 	public static var weldStrength:Float = 5;
+	
+	// filter groups
+	public static var FILTER_LANDERBODY:Int = 1;
+	public static var FILTER_LANDERSTRUT:Int = 2;
+	public static var FILTER_LANDSCAPE:Int = 4;
+	public static var FILTER_PLATFORM:Int = 8;
+	public static var FILTER_BORDER:Int = 8;
+	
+	public static var platformWidth:Int = 100;
 	
 	
 	public function new() 

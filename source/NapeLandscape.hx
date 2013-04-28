@@ -1,5 +1,6 @@
 package ;
 
+import nape.dynamics.InteractionFilter;
 import nape.geom.GeomPoly;
 import nape.geom.GeomPolyList;
 import nape.geom.Vec2;
@@ -74,7 +75,7 @@ class NapeLandscape extends FlxPhysSprite
 		
 		for (i in 0...arrayLength)
 		{
-			var noiseValue = (octave1.noise(i) / 2) + (octave2.noise(i) / 8) + (octave3.noise(i) / 16) + (octave4.noise(i) / 32);
+			var noiseValue = (octave1.noise(i) * 0.8) + (octave2.noise(i) / 8) + (octave3.noise(i) / 16) + (octave4.noise(i) / 32);
 			noiseValue = (noiseValue * 2) - 1;
 			noiseValue = FlxU.abs(noiseValue);
 			landscapeArray[i] = FlxU.roundDecimal(noiseValue, 3); 
@@ -96,8 +97,8 @@ class NapeLandscape extends FlxPhysSprite
 		
 		#end
 		
-		pointsArray.push(new Vec2(landscapeLength, Registry.worldMaxY));
-		pointsArray.push(new Vec2(0, Registry.worldMaxY));
+		pointsArray.push(new Vec2(landscapeLength, Registry.worldMaxY + 100));
+		pointsArray.push(new Vec2(0, Registry.worldMaxY + 100));
 		
 		pointsArray.reverse();
 		
@@ -125,6 +126,12 @@ class NapeLandscape extends FlxPhysSprite
 		}
 		
 		body.type = BodyType.STATIC;
+		
+		var interaction:InteractionFilter = new InteractionFilter();
+		interaction.collisionGroup = Registry.FILTER_LANDSCAPE;
+		interaction.collisionMask = ~ (Registry.FILTER_PLATFORM);
+		
+		body.setShapeFilters(interaction);
 		
 	}
 	

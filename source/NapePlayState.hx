@@ -2,6 +2,9 @@ package ;
 
 import nape.callbacks.CbType;
 import nape.constraint.PivotJoint;
+import nape.dynamics.InteractionFilter;
+import nape.geom.Ray;
+import nape.geom.RayResult;
 import nape.geom.Vec2;
 import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
@@ -72,6 +75,7 @@ class NapePlayState extends FlxPhysState
 		#end
 		
 		Registry.LANDSCAPE = new CbType();
+		Registry.PLATFORM = new CbType();
 		Registry.PROXIMITYDETECTOR = new CbType();
 		
 		
@@ -109,7 +113,9 @@ class NapePlayState extends FlxPhysState
 		Registry.landscape = landscape;
 		landscape.body.cbTypes.add(Registry.LANDSCAPE);
 		
-		createStars();		
+		createStars();	
+		
+		setupPlatforms();
 		
 		focusPoint = new FlxPoint(lander.x, lander.y);
 		
@@ -413,6 +419,60 @@ class NapePlayState extends FlxPhysState
 			newSprite.makeGraphic(2, 2, 0xFFFFFFFF);
 			add (newSprite);
 			newSprite.cameras = [zoomCamera];
+		}
+	}
+	
+	private function setupPlatforms():Void 
+	{
+		// Set up platforms
+		var platformX:Int;
+		
+		var ray:Ray = new Ray(Vec2.weak(0, 0), Vec2.weak(0, 1));
+		var rayFilter:InteractionFilter = new InteractionFilter(Registry.FILTER_LANDSCAPE, Registry.FILTER_LANDSCAPE);
+		
+		var border:Int = 200; // platforms won't appear within "border" pixels of the edge
+		
+		var range:Float = (Registry.worldMaxX - Registry.worldMinX) - (2 * border);
+		
+		var minY:Float;
+		var maxY:Float;
+		
+		for (i in 0...6)
+		{
+			platformX = Std.int((FlxG.random() * range) + border);
+			minY = 10000;
+			maxY = -10000;
+			
+			for (rayX in 0...Registry.platformWidth)
+			{
+				ray.origin = Vec2.weak(rayX + platformX, 0);
+				var rayResult:RayResult = FlxPhysState.space.rayCast(ray, false, rayFilter);
+				trace(rayX + platformX);
+				trace(ray.at(60).y);
+				trace(rayResult);
+				if (rayResult != null)
+				{
+					if (rayResult.distance > maxY) maxY = rayResult.distance;
+					if (rayResult.distance < minY) minY = rayResult.distance;
+					rayResult.dispose();
+				}
+			}
+			
+			if (minY < 10000 && maxY > -10000)
+			{
+				var platform = new LandingPad(platformX, minY);
+				add(platform);
+			}
+		
+			#if debug
+			var tempSprite:FlxPhysSprite = new FlxPhysSprite(platformX, 0);
+			tempSprite.makeGraphic(16, 16);
+			add(tempSprite);
+			#end
+			
+			
+			
+			// Due to y == 0 being the top of the screen, minY is the highest point
 		}
 	}
 }
