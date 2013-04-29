@@ -460,7 +460,7 @@ class NapePlayState extends FlxPhysState
 			
 			if (minY < 10000 && maxY > -10000)
 			{
-				var platform = new LandingPad(platformX, minY);
+				var platform = new LandingPad(platformX + (Registry.platformWidth / 2), minY);
 				add(platform);
 			}
 		
