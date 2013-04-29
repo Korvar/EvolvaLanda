@@ -50,6 +50,8 @@ class NapeLander extends FlxPhysSprite
 	var upperJetEmitter:FlxEmitter;
 	var mainEngineEmitter:FlxEmitter;
 	
+	var fuel:Float;
+	
 
 
 	var mainEngineEmitterWidth = 6;
