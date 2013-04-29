@@ -30,7 +30,7 @@ class LandingPad extends FlxPhysSprite
 		body.space = FlxPhysState.space;
 		
 		
-		makeGraphic(100, 25, 0x00000000);
+		makeGraphic(Registry.platformWidth, 25, 0x00000000);
 		drawLine(0, 0, width-1, 0, 0xffffffff, 2);
 		drawLine(width, 0, width-1, height-1, 0xffffffff, 2);
 		drawLine(width-1, height-1, 0, width-1, 0xffffffff, 2);
