@@ -38,6 +38,7 @@ class Registry
 	
 	public static var landscape:NapeLandscape;
 	
+	// CBtypes, should probably rename
 	public static var LANDSCAPE:CbType;
 	public static var PLATFORM:CbType;
 	public static var PROXIMITYDETECTOR:CbType;
@@ -53,6 +54,15 @@ class Registry
 	public static var FILTER_BORDER:Int = 8;
 	
 	public static var platformWidth:Int = 100;
+	
+	// Damage levels
+	public static var THRESHOLD_SHAKEN:Float = 5000;
+	public static var THRESHOLD_TROUSERS:Float = 7500;
+	public static var THRESHOLD_INJURED:Float = 10000;
+	public static var THRESHOLD_JAM:Float = 12500;
+	
+	// Completely arbritrary fuel capacity
+	public static var fuelCapacity:Float = 20000;
 	
 	
 	public function new() 
