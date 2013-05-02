@@ -38,8 +38,6 @@ class NapePlayState extends FlxPhysState
 	var defaultZoom:Float = 0.6;
 	var landingZoom:Float = 3.0;
 	
-	var mouseJoint:PivotJoint;
-	
 	var hud:FlxGroup;
 	
 	#if debug
@@ -58,16 +56,7 @@ class NapePlayState extends FlxPhysState
 	
 	override public function create():Void
 	{ 
-		#if debug
-
-		var debugString:FlxText = new FlxText(0, 0, FlxG.width, "test");
-		debugString.size = 15;
-		debugString.color = 0xFFFFFF;
-		Registry.debugString = debugString;
-		debugString.scrollFactor = (new FlxPoint(0, 0));
-		debugString.cameras = [FlxG.camera];
-		add(debugString);
-		#end		
+	
 			
 		super.create();
 		#if mobile
@@ -102,7 +91,6 @@ class NapePlayState extends FlxPhysState
 		FlxG.camera.follow(lander);
 		zoomCamera.follow(lander);
 
-		#if debug debugString.cameras = [FlxG.camera, zoomCamera]; #end
 		lander.cameras = [zoomCamera];
 		
 		
@@ -126,11 +114,6 @@ class NapePlayState extends FlxPhysState
 		setupDebugHUD();
 		#end
 		
-		
-		mouseJoint = new PivotJoint(FlxPhysState.space.world, null, Vec2.weak(), Vec2.weak());
-		mouseJoint.space = FlxPhysState.space;
-		mouseJoint.active = false;
-		mouseJoint.stiff = false;
 		
 		disablePhysDebug();
 	}
@@ -168,39 +151,7 @@ class NapePlayState extends FlxPhysState
 
 			}
 		}
-		
-		if (FlxG.keys.justPressed("G"))
-		{
-			disablePhysDebug();
-		}
-		
-		if (mouseJoint.active) 
-		{
-			mouseJoint.anchor1.setxy(FlxG.mouse.x, FlxG.mouse.y);
-		}
-		
-		if (FlxG.mouse.justPressed())
-		{
-			var mousePoint:Vec2 = Vec2.get(FlxG.mouse.x, FlxG.mouse.y);
-			for (body in FlxPhysState.space.bodiesUnderPoint(mousePoint))
-			{
-				if (!body.isDynamic())
-				{
-					continue;
-				}
-				mouseJoint.body2 = body;
-				mouseJoint.anchor2.set(body.worldPointToLocal(mousePoint, true));
-				mouseJoint.active = true;
-				break;
-			}
-			mousePoint.dispose();
-		}
-		
-		if (FlxG.mouse.justReleased())
-		{
-			mouseJoint.active = false;
-		}
-			
+	
 	}
 	
 	private function setupHUD():Void 
@@ -288,6 +239,11 @@ class NapePlayState extends FlxPhysState
 	function setupDebugHUD()
 	{
 		debugHud = new FlxGroup();
+		
+		var debugString:FlxText = new FlxText(FlxG.width - 300, 300, FlxG.width, "test");
+		debugString.size = 8;
+		debugString.color = 0xFFFFFF;
+		Registry.debugString = debugString;
 
 		var thrustMaxButtonUp:FlxButton = new FlxButton(FlxG.width - 300, 100, null);
 		var thrustMaxButtonDown:FlxButton = new FlxButton(FlxG.width - 64, 100, null);
@@ -329,7 +285,8 @@ class NapePlayState extends FlxPhysState
 		for (item in [thrustMaxButtonDown, thrustMaxButtonUp, thrustMaxText, 
 						thrustDeltaButtonUp, thrustDeltaButtonDown, thrustDeltaText,
 						weldStrengthButtonUp, weldStrengthButtonDown, weldStrengthText,
-						maneuverJetThrustButtonUp,maneuverJetThrustButtonDown, maneuverJetThrustText])
+						maneuverJetThrustButtonUp, maneuverJetThrustButtonDown, maneuverJetThrustText,
+						debugString])
 		{
 			debugHud.add(item);
 		}
