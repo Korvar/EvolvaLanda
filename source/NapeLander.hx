@@ -315,8 +315,6 @@ class NapeLander extends FlxPhysSprite
 		#if debug
 		Registry.debugString.text = "";
 		Registry.debugString.text += "LanderX: " + FlxU.roundDecimal(x, 3) + " LanderY: " + FlxU.roundDecimal(y, 3);
-		Registry.debugString.text += "\nMouseX: " + FlxU.roundDecimal(FlxG.mouse.x,3) + " MouseY: " + FlxU.roundDecimal(FlxG.mouse.y,3);
-		Registry.debugString.text += "\nMouseX: " + FlxG.mouse.screenX + " MouseY: " + FlxG.mouse.screenY;
 		
 		var totalImpulse:Vec3 = body.totalImpulse();
 		
