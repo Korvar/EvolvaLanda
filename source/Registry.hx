@@ -33,8 +33,8 @@ class Registry
 	public static var thrust:Float = 0.0;
 	public static var thrustMax:Float = 1500;
 	
-	public static var maneuverJetThrust:Float = 7350;
-	public static var thrustDelta:Float = 200;
+	public static var maneuverJetThrust:Float = 5500;
+	public static var thrustDelta:Float = 150;
 	
 	public static var landscape:NapeLandscape;
 	
@@ -43,7 +43,7 @@ class Registry
 	public static var PROXIMITYDETECTOR:CbType;
 	
 	public static var zoomCamera:ZoomCamera;
-	public static var weldStrength:Float = 5;
+	public static var weldStrength:Float = 20;
 	
 	// filter groups
 	public static var FILTER_LANDERBODY:Int = 1;

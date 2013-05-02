@@ -66,6 +66,7 @@ class NapeLander extends FlxPhysSprite
 	
 	var maxImpulse:Vec3;
 	var minImpulse:Vec3;
+	var maxImpulseMagnitude:Float;
 	
 	#end
 
@@ -127,6 +128,7 @@ class NapeLander extends FlxPhysSprite
 		#if debug
 		maxImpulse = new Vec3();
 		minImpulse = new Vec3();
+		maxImpulseMagnitude = 0;
 		#end
 		
 		var proximityDetectorShape:Shape = new Circle(150 * multiplier);
@@ -327,11 +329,14 @@ class NapeLander extends FlxPhysSprite
 		if (totalImpulse.x < minImpulse.x) minImpulse.x = totalImpulse.x;
 		if (totalImpulse.y < minImpulse.y) minImpulse.y = totalImpulse.y;
 		if (totalImpulse.z < minImpulse.z) minImpulse.z = totalImpulse.z;
+		
+		if (totalImpulse.length > maxImpulseMagnitude) maxImpulseMagnitude = totalImpulse.length;
 
 		Registry.debugString.text += "\nMax Impulse: " + FlxU.roundDecimal(maxImpulse.x, 3) + " " 
 			+ FlxU.roundDecimal(maxImpulse.y, 3) + " " + FlxU.roundDecimal(maxImpulse.z, 3);	
 		Registry.debugString.text += "\nMin Impulse: " + FlxU.roundDecimal(minImpulse.x, 3) + " " 
 			+ FlxU.roundDecimal(minImpulse.y, 3) + " " + FlxU.roundDecimal(minImpulse.z, 3);
+		Registry.debugString.text += "\nMaxImpuseMagnitude: " + FlxU.roundDecimal(maxImpulseMagnitude, 3);
 		
 		#end
 		
@@ -386,10 +391,9 @@ class NapeLander extends FlxPhysSprite
 		mainEngineEmitter.setYSpeed(minY + body.velocity.y, maxY + body.velocity.y);
 		
 		#if debug
-		Registry.debugString.text += "\nXV: " + FlxU.roundDecimal(velocity.x, 3) 
-			+ " YV: " + FlxU.roundDecimal(velocity.y, 3);
 		Registry.debugString.text += "\nXV: " + FlxU.roundDecimal(body.velocity.x, 3) 
-			+ " YV: " + FlxU.roundDecimal(body.velocity.y, 3);
+			+ " YV: " + FlxU.roundDecimal(body.velocity.y, 3) + " AV: " + FlxU.roundDecimal(body.angularVel, 3);
+			
 		Registry.debugString.text += "\nFuel: " + FlxU.roundDecimal(fuel, 3);
 		#end
 		
