@@ -50,7 +50,7 @@ class NapeLander extends FlxPhysSprite
 	var upperJetEmitter:FlxEmitter;
 	var mainEngineEmitter:FlxEmitter;
 	
-	var fuel:Float;
+	var fuel:Float = 0;
 	
 
 
@@ -333,7 +333,7 @@ class NapeLander extends FlxPhysSprite
 		Registry.debugString.text += "\nMax Impulse: " + FlxU.roundDecimal(maxImpulse.x, 3) + " " 
 			+ FlxU.roundDecimal(maxImpulse.y, 3) + " " + FlxU.roundDecimal(maxImpulse.z, 3);	
 		Registry.debugString.text += "\nMin Impulse: " + FlxU.roundDecimal(minImpulse.x, 3) + " " 
-			+ FlxU.roundDecimal(minImpulse.y, 3) + " " + FlxU.roundDecimal(minImpulse.z, 3);		
+			+ FlxU.roundDecimal(minImpulse.y, 3) + " " + FlxU.roundDecimal(minImpulse.z, 3);
 		
 		#end
 		
@@ -355,18 +355,22 @@ class NapeLander extends FlxPhysSprite
 		{
 			body.applyImpulse(body.localVectorToWorld(Vec2.weak(-Registry.maneuverJetThrust, 0)), upperJetVec);
 			body.applyImpulse(body.localVectorToWorld(Vec2.weak(Registry.maneuverJetThrust, 0)), lowerJetVec);
+			fuel = fuel - Registry.maneuverJetThrust;
 		}
 		
 		if (FlxG.keys.pressed("RIGHT") || FlxG.keys.pressed("D") || Registry.buttonRight.status == FlxButton.PRESSED)
 		{
 			body.applyImpulse(body.localVectorToWorld(Vec2.weak(Registry.maneuverJetThrust, 0)), upperJetVec);
-			body.applyImpulse(body.localVectorToWorld(Vec2.weak(-Registry.maneuverJetThrust, 0)), lowerJetVec);
+			body.applyImpulse(body.localVectorToWorld(Vec2.weak( -Registry.maneuverJetThrust, 0)), lowerJetVec);
+			fuel = fuel - Registry.maneuverJetThrust;
 		}		
 		
 		thrust = FlxU.bound(thrust, -Registry.thrustMax, 0);
 		#if debug
 		Registry.debugString.text += "\nThrust: " + thrust;
 		#end
+		
+		fuel = fuel + thrust;  // Remember, thrust is negative
 		
 		var thrustVecMagnitude = (thrust / thrustMax) * 100 * multiplier;
 		
@@ -388,6 +392,7 @@ class NapeLander extends FlxPhysSprite
 			+ " YV: " + FlxU.roundDecimal(velocity.y, 3);
 		Registry.debugString.text += "\nXV: " + FlxU.roundDecimal(body.velocity.x, 3) 
 			+ " YV: " + FlxU.roundDecimal(body.velocity.y, 3);
+		Registry.debugString.text += "\nFuel: " + FlxU.roundDecimal(fuel, 3);
 		#end
 		
 		if (thrust <  0)
@@ -401,7 +406,7 @@ class NapeLander extends FlxPhysSprite
 		body.applyImpulse(body.localVectorToWorld(Vec2.weak(0, thrust)));
 
 		#if debug
-		Registry.debugString.text += "\n" + FlxG.score;
+		Registry.debugString.text += "\nScore: " + FlxG.score;
 		#end
 		
 		super.update();
