@@ -52,7 +52,9 @@ class NapeLander extends FlxPhysSprite
 	
 	var fuel:Float = 0;
 	
-
+	var crewStatus:Int = 0;
+	
+	var crewStatusString:Array<String>;
 
 	var mainEngineEmitterWidth = 6;
 	
@@ -72,6 +74,7 @@ class NapeLander extends FlxPhysSprite
 
 	public function new(X:Float=0, Y:Float=0, SimpleGraphic:Dynamic=null, CreateBody:Bool=true) 
 	{
+		crewStatusString = ["Fine", "Shaken", "Need New Trousers", "Injured", "Dead", "Jam"];
 		super(X, Y, SimpleGraphic, CreateBody);
 
 		STRUTWELD = new CbType();	
@@ -332,18 +335,41 @@ class NapeLander extends FlxPhysSprite
 		
 		if (totalImpulse.length > maxImpulseMagnitude) maxImpulseMagnitude = totalImpulse.length;
 		
-		var crewStatus:String = "Fine";
-		if (maxImpulseMagnitude > Registry.THRESHOLD_SHAKEN) crewStatus = "Shaken";
-		if (maxImpulseMagnitude > Registry.THRESHOLD_TROUSERS) crewStatus = "Need New Trousers";
-		if (maxImpulseMagnitude > Registry.THRESHOLD_INJURED) crewStatus = "Injured";
-		if (maxImpulseMagnitude > Registry.THRESHOLD_SHAKEN) crewStatus = "Jam";
+
+		if (maxImpulseMagnitude > Registry.THRESHOLD_JAM && crewStatus < 5) 
+		{ 
+			FlxG.flash(0xffff0000);
+			crewStatus = 5;
+		}
+		if (maxImpulseMagnitude > Registry.THRESHOLD_DEAD && crewStatus < 4) 
+		{ 
+			FlxG.flash(0xffff0000);
+			crewStatus = 4;
+		}
+		if (maxImpulseMagnitude > Registry.THRESHOLD_INJURED && crewStatus < 3) 
+		{ 
+			FlxG.flash(0xffff0000);
+			crewStatus = 3;
+		}
+		if (maxImpulseMagnitude > Registry.THRESHOLD_TROUSERS && crewStatus < 2) 
+		{ 
+			FlxG.flash(0xffff0000);
+			crewStatus = 2;
+		}
+		if (maxImpulseMagnitude > Registry.THRESHOLD_SHAKEN && crewStatus < 1) 
+		{
+			FlxG.flash(0xffff0000);
+			crewStatus = 1;
+		}
+
+
 		
 		Registry.debugString.text += "\nMax Impulse: " + FlxU.roundDecimal(maxImpulse.x, 3) + " " 
 			+ FlxU.roundDecimal(maxImpulse.y, 3) + " " + FlxU.roundDecimal(maxImpulse.z, 3);	
 		Registry.debugString.text += "\nMin Impulse: " + FlxU.roundDecimal(minImpulse.x, 3) + " " 
 			+ FlxU.roundDecimal(minImpulse.y, 3) + " " + FlxU.roundDecimal(minImpulse.z, 3);
 		Registry.debugString.text += "\nMaxImpuseMagnitude: " + FlxU.roundDecimal(maxImpulseMagnitude, 3) + 
-			"Crew Status: " + crewStatus;
+			" Crew Status: " + crewStatusString[crewStatus];
 		
 		#end
 		

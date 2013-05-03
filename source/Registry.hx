@@ -59,7 +59,8 @@ class Registry
 	public static var THRESHOLD_SHAKEN:Float = 5000;
 	public static var THRESHOLD_TROUSERS:Float = 7500;
 	public static var THRESHOLD_INJURED:Float = 10000;
-	public static var THRESHOLD_JAM:Float = 12500;
+	public static var THRESHOLD_DEAD:Float = 12500;
+	public static var THRESHOLD_JAM:Float = 15000;
 	
 	// Completely arbritrary fuel capacity
 	public static var fuelCapacity:Float = 20000;
